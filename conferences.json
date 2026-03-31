@@ -1,0 +1,272 @@
+{
+  "conferences": [
+    {
+      "name": "ESORICS 2025 (Round 2)",
+      "url": "https://esorics2025.sciencesconf.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-04-29T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "ICAART (Regular Papers)",
+      "url": "https://icaart.scitevents.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-09-30T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "LLMs",
+        "Usability",
+        "Speech",
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "ICAART (Position Papers)",
+      "url": "https://icaart.scitevents.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-11-13T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "LLMs",
+        "Usability",
+        "Speech",
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "IJCB 2026",
+      "url": "https://ijcb2026.ieee-biometrics.org/call-for-papers",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-10T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "Biometrics",
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "BIOSIG 2026",
+      "url": "https://biosig.de/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-07-30T23:59:59"
+      },
+      "core_ranking": "-",
+      "tags": [
+        "Biometrics",
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "USENIX Security '26 (Cycle 1)",
+      "url": "https://www.usenix.org/conference/usenixsecurity26/call-for-papers",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-08-26T23:59:00"
+      },
+      "note": "Cycle 1 (check CFP for mandatory registration one week earlier).",
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ]
+    },
+    {
+      "name": "USENIX Security '26 (Cycle 2)",
+      "url": "https://www.usenix.org/conference/usenixsecurity26/call-for-papers",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-02-05T23:59:00"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "IEEE FG 2026 (Round 1)",
+      "url": "https://fg2026.ieee-biometrics.org/cfp/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-10-06T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Biometrics"
+      ],
+      "note": ""
+    },
+    {
+      "name": "IEEE FG 2026 (Round 2)",
+      "url": "https://fg2026.ieee-biometrics.org/cfp/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-25T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Biometrics"
+      ],
+      "note": ""
+    },
+    {
+      "name": "WACV 2026",
+      "url": "https://wacv.thecvf.com/Conferences/2026/Dates",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-07-11T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "LLMs"
+      ],
+      "note": ""
+    },
+    {
+      "name": "INTERSPEECH 2026",
+      "url": "https://interspeech2026.org/en-AU/pages/calls/call-for-papers",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-02-25T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "Speech"
+      ],
+      "note": ""
+    },
+    {
+      "name": "IEEE ICME 2025",
+      "url": "https://2025.ieeeicme.org/important-dates/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2024-12-23T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "LLMs"
+      ],
+      "note": ""
+    },
+    {
+      "name": "PETS (PoPETs 2026 Issue 1)",
+      "url": "https://petsymposium.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-05-31T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "PETS (PoPETs 2026 Issue 2)",
+      "url": "https://petsymposium.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-08-31T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "PETS (PoPETs 2026 Issue 3)",
+      "url": "https://petsymposium.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-11-30T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "PETS (PoPETs 2026 Issue 4)",
+      "url": "https://petsymposium.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-02-28T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "SAFECOMP 2026",
+      "url": "https://safecomp2026.webs.upv.es/call-for-papers/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-03-15T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Security"
+      ],
+      "note": ""
+    },
+    {
+      "name": "blockTEA 2026",
+      "url": "https://blocktea.eai-conferences.org/2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-20T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Blockchain"
+      ],
+      "note": ""
+    },
+    {
+      "name": "AFT 2026",
+      "url": "https://aft.ifca.ai/aft26/CFP.html",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-05-20T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Blockchain"
+      ],
+      "note": ""
+    },
+    {
+      "name": "AFT 2026",
+      "url": "https://aft.ifca.ai/aft26/CFP.html",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-05-20T23:59:59"
+      },
+      "core_ranking": "",
+      "tags": [
+        "Blockchain"
+      ],
+      "note": ""
+    }
+  ]
+}

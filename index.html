@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conference Deadlines</title>
+    <meta name="color-scheme" content="light" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="headerBox header__inner">
+        <div class="header__left">
+          <h1 class="title">Conference Deadlines</h1>
+          <p class="subtitle">
+            Deadlines are interpreted in <span class="mono">Anywhere-on-Earth</span> (AoE, UTC−12). Times shown are AoE.
+          </p>
+        </div>
+        <div class="header__right">
+          <div class="controls">
+            <div class="control">
+              <label class="control__label" for="tagFilter">Tags</label>
+              <div id="tagFilter" class="tagFilter" aria-label="Tag filters"></div>
+            </div>
+            <div class="control control--inline">
+              <label class="checkbox">
+                <input id="hidePast" type="checkbox" checked />
+                <span>Hide past deadlines</span>
+              </label>
+            </div>
+            <div class="control control--inline">
+              <label class="checkbox">
+                <input id="showOnlySelectedTags" type="checkbox" />
+                <span>Match all selected tags</span>
+              </label>
+            </div>
+            <div class="control control--inline">
+              <label class="checkbox">
+                <input id="darkMode" type="checkbox" />
+                <span>Dark mode</span>
+              </label>
+            </div>
+            <div class="control control--inline">
+              <button id="refreshBtn" class="btn" type="button">Refresh</button>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="container columns" role="region" aria-label="Conference lists">
+        <div class="column">
+          <div class="column__header">
+            <div class="column__titleRow">
+              <h2 class="column__title">Known submission deadlines</h2>
+              <div class="column__sort">
+                <label class="control__label" for="sortKnown">Sort</label>
+                <select id="sortKnown" class="select">
+                  <option value="deadlineAsc">Submission time ↑</option>
+                  <option value="deadlineDesc">Submission time ↓</option>
+                  <option value="countdownAsc">Countdown ↑</option>
+                  <option value="countdownDesc">Countdown ↓</option>
+                  <option value="nameAsc">Name A→Z</option>
+                  <option value="nameDesc">Name Z→A</option>
+                  <option value="coreAsc">CORE ↑</option>
+                  <option value="coreDesc">CORE ↓</option>
+                </select>
+              </div>
+            </div>
+            <div class="table table--header" aria-hidden="true">
+              <div class="row row--header" data-view="known">
+                <div class="cell cell--name">Conference</div>
+                <div class="cell cell--deadline">Deadline (AoE)</div>
+                <div class="cell cell--core">CORE</div>
+                <div class="cell cell--tags">Tags</div>
+                <div class="cell cell--countdown">Countdown</div>
+                <div class="cell cell--note">Note</div>
+              </div>
+            </div>
+          </div>
+          <div id="knownList" class="column__body" role="region" aria-label="Known submission deadlines list" tabindex="0"></div>
+        </div>
+
+        <div class="column">
+          <div class="column__header">
+            <div class="column__titleRow">
+              <h2 class="column__title">To Be Disclosed</h2>
+              <div class="column__sort">
+                <label class="control__label" for="sortTbd">Sort</label>
+                <select id="sortTbd" class="select">
+                  <option value="approxAsc">Approx disclosure date ↑</option>
+                  <option value="approxDesc">Approx disclosure date ↓</option>
+                  <option value="nameAsc">Name A→Z</option>
+                  <option value="nameDesc">Name Z→A</option>
+                  <option value="coreAsc">CORE ↑</option>
+                  <option value="coreDesc">CORE ↓</option>
+                </select>
+              </div>
+            </div>
+            <div class="table table--header" aria-hidden="true">
+              <div class="row row--header" data-view="tbd">
+                <div class="cell cell--name">Conference</div>
+                <div class="cell cell--deadline">Deadline (AoE)</div>
+                <div class="cell cell--core">CORE</div>
+                <div class="cell cell--tags">Tags</div>
+                <div class="cell cell--note">Note</div>
+              </div>
+            </div>
+          </div>
+          <div id="tbdList" class="column__body" role="region" aria-label="TBD submission deadlines list" tabindex="0"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <span id="statusText" class="statusText">Loading…</span>
+        </div>
+        <div class="footer__right">
+          <span class="mono">Config:</span> <a class="link" href="./conferences.json">conferences.json</a>
+        </div>
+      </div>
+    </footer>
+
+    <script defer src="./app.js"></script>
+  </body>
+</html>
