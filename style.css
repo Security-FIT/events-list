@@ -464,6 +464,61 @@ html[data-theme="light"] {
   text-overflow: ellipsis;
 }
 
+/* Mobile: switch from table-like grid to stacked cards. */
+@media (max-width: 720px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .column {
+    min-height: auto;
+  }
+
+  .table--header {
+    display: none;
+  }
+
+  .row[data-view="known"],
+  .row[data-view="tbd"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "name name"
+      "deadline deadline"
+      "countdown core"
+      "tags tags"
+      "note note";
+    gap: 8px;
+  }
+
+  .row[data-view="tbd"] {
+    grid-template-areas:
+      "name name"
+      "deadline deadline"
+      "core core"
+      "tags tags"
+      "note note";
+  }
+
+  .row .cell--name { grid-area: name; }
+  .row .cell--deadline { grid-area: deadline; }
+  .row .cell--core { grid-area: core; }
+  .row .cell--tags { grid-area: tags; }
+  .row .cell--note { grid-area: note; }
+  .row[data-view="known"] .cell--countdown { grid-area: countdown; }
+
+  .cell--deadline .deadline {
+    white-space: normal;
+  }
+
+  .countdown {
+    white-space: normal;
+  }
+
+  .column__body {
+    padding: 10px;
+  }
+}
+
 .muted {
   color: var(--muted);
 }
