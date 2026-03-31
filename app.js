@@ -716,7 +716,11 @@ function confRowJournals(j) {
   const tagChips = el("div", { class: "tagList" }, (j.tags || []).map((t) => el("span", { class: "tagChip", text: tagDisplay(t), "data-tag": t })));
   const noteText = String(j.note || "").trim();
 
-  return el("div", { class: "row", "data-view": "journals", "data-id": j.id }, [
+  const gradient = buildTagGradient(j.tags);
+  const attrs = { class: "row", "data-view": "journals", "data-id": j.id };
+  if (gradient) attrs.style = `--tag-gradient: ${gradient};`;
+
+  return el("div", attrs, [
     el("div", { class: "cell cell--name" }, [nameLink, badge]),
     el("div", { class: "cell cell--tags" }, [tagChips]),
     el("div", { class: "cell cell--note" }, [el("div", { class: "noteText", text: noteText || "—" })])
