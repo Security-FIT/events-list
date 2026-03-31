@@ -573,16 +573,6 @@ async function main() {
     if (typeof mq.addEventListener === "function") mq.addEventListener("change", handler);
     else if (typeof mq.addListener === "function") mq.addListener(handler);
   }
-  bind("#refreshBtn", "click", async () => {
-    setStatus("Refreshing…");
-    try {
-      const raw = await loadConfig();
-      window.__CONF_DATA__ = raw.map(normalizeConference);
-      rerender();
-    } catch (e) {
-      setStatus(String(e?.message ?? e));
-    }
-  });
 
   setStatus("Loading conferences.json…");
   try {

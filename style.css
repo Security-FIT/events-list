@@ -73,6 +73,43 @@ a { color: inherit; }
   border-radius: 12px;
   box-shadow: 0 2px 12px var(--shadow);
   padding: 18px 18px 12px 18px;
+  position: relative;
+}
+
+.themeEmojiBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.themeEmojiBtn:hover {
+  border-color: color-mix(in srgb, var(--text) 20%, var(--border));
+}
+
+.themeEmojiBtn__input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.themeEmojiBtn__emoji--dark { display: none; }
+.themeEmojiBtn__input:checked ~ .themeEmojiBtn__icon .themeEmojiBtn__emoji--light { display: none; }
+.themeEmojiBtn__input:checked ~ .themeEmojiBtn__icon .themeEmojiBtn__emoji--dark { display: inline; }
+
+.themeEmojiBtn__input:focus-visible ~ .themeEmojiBtn__icon {
+  outline: 2px solid color-mix(in srgb, var(--text) 35%, transparent);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 .header__inner {
@@ -166,6 +203,8 @@ a { color: inherit; }
   border: 1px solid var(--border);
   background: var(--bg);
 }
+
+/* (theme toggle switch styles removed; replaced by emoji button) */
 
 .btn {
   height: 40px;
