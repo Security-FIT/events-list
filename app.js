@@ -522,7 +522,7 @@ function renderKnown(listEl, known, { hidePast, knownSort }) {
   }
 
   listEl.textContent = "";
-  const table = el("div", { class: "table" });
+  const upcomingTable = el("div", { class: "table" });
 
   for (const c of upcoming) {
     const parts = formatAoEParts(c.deadlineEpochMs);
@@ -533,9 +533,11 @@ function renderKnown(listEl, known, { hidePast, knownSort }) {
     if (msLeftAoE >= 0 && msLeftAoE <= 30 * 24 * 60 * 60 * 1000) {
       row.setAttribute("data-deadline-state", "soon");
     }
-    table.appendChild(row);
+    upcomingTable.appendChild(row);
     attachExpandableNote(row, String(c.note || ""));
   }
+
+  listEl.appendChild(upcomingTable);
 
   if (past.length > 0) {
     const toggleBtn = el(
@@ -547,35 +549,34 @@ function renderKnown(listEl, known, { hidePast, knownSort }) {
         onClick: () => {
           window.__HIDE_PAST__ = !window.__HIDE_PAST__;
           saveHidePast(window.__HIDE_PAST__);
-          // Re-render using latest state
           if (window.__CONF_DATA__) {
             const vm = compileViewModel(window.__CONF_DATA__);
-            renderKnown(listEl, vm.known, { hidePast: vm.hidePast });
+            renderKnown(listEl, vm.known, { hidePast: vm.hidePast, knownSort: vm.knownSort });
           }
         }
       },
       [hidePast ? "Show more" : "Show less"]
     );
 
-    table.appendChild(
-      el("div", { class: "divider" }, [
+    // Sticky divider must be a direct child of the scroll container for reliable sticky behavior.
+    listEl.appendChild(
+      el("div", { class: "divider divider--pastSticky" }, [
         el("span", { text: `Past deadlines (${past.length})` }),
         toggleBtn
       ])
     );
-  }
 
-  if (!hidePast) {
-    for (const c of past) {
-      const parts = formatAoEParts(c.deadlineEpochMs);
-      const row = confRow(c, { deadlineLines: [parts.date, parts.time], deadlineMuted: true, view: "known" });
-      // Past deadlines are not "soon" highlighted.
-      table.appendChild(row);
-      attachExpandableNote(row, String(c.note || ""));
+    if (!hidePast) {
+      const pastTable = el("div", { class: "table" });
+      for (const c of past) {
+        const parts = formatAoEParts(c.deadlineEpochMs);
+        const row = confRow(c, { deadlineLines: [parts.date, parts.time], deadlineMuted: true, view: "known" });
+        pastTable.appendChild(row);
+        attachExpandableNote(row, String(c.note || ""));
+      }
+      listEl.appendChild(pastTable);
     }
   }
-
-  listEl.appendChild(table);
 }
 
 function renderTbd(listEl, tbd) {
