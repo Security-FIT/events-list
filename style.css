@@ -263,6 +263,26 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   overflow: hidden;
 }
 
+.coreBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* Subtle but distinct CORE colors */
+.coreBadge--Astar { border-color: color-mix(in srgb, #f2c14e 55%, var(--border)); color: color-mix(in srgb, #f2c14e 75%, var(--text)); }
+.coreBadge--A { border-color: color-mix(in srgb, #7ae0b8 45%, var(--border)); color: color-mix(in srgb, #7ae0b8 70%, var(--text)); }
+.coreBadge--B { border-color: color-mix(in srgb, #7aa2ff 45%, var(--border)); color: color-mix(in srgb, #7aa2ff 70%, var(--text)); }
+.coreBadge--C { border-color: color-mix(in srgb, #c78bff 45%, var(--border)); color: color-mix(in srgb, #c78bff 70%, var(--text)); }
+.coreBadge--unranked { border-color: var(--border); color: var(--muted); }
+
 .row::before {
   content: "";
   position: absolute;
@@ -286,7 +306,6 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   grid-template-columns:
     minmax(0, 1.3fr)
     minmax(0, 1fr)
-    minmax(0, 0.55fr)
     minmax(0, 0.9fr)
     minmax(0, 0.7fr)  /* Countdown */
     minmax(0, 1fr);   /* Note (last) */
@@ -296,7 +315,6 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   grid-template-columns:
     minmax(0, 1.3fr)
     minmax(0, 1fr)
-    minmax(0, 0.55fr)
     minmax(0, 0.9fr)
     minmax(0, 1fr);   /* Note (last) */
 }
@@ -313,7 +331,6 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   grid-template-columns:
     minmax(0, 1.3fr)
     minmax(0, 1fr)
-    minmax(0, 0.55fr)
     minmax(0, 0.9fr)
     minmax(0, 0.7fr)
     minmax(0, 1fr);
@@ -323,13 +340,17 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   grid-template-columns:
     minmax(0, 1.3fr)
     minmax(0, 1fr)
-    minmax(0, 0.55fr)
     minmax(0, 0.9fr)
     minmax(0, 1fr);
 }
 
 .cell {
   min-width: 0;
+}
+
+.cell--name {
+  position: relative;
+  padding-right: 56px; /* reserve space for CORE badge */
 }
 
 .cell--name a {
@@ -531,6 +552,25 @@ html[data-theme="light"] {
   border-radius: 10px;
   border: 1px dashed var(--border);
   background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pastToggle {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pastToggle:hover {
+  color: var(--text);
 }
 
 .footer {

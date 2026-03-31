@@ -24,10 +24,7 @@
               <div id="tagFilter" class="tagFilter" aria-label="Tag filters"></div>
             </div>
             <div class="control control--inline">
-              <label class="checkbox">
-                <input id="hidePast" type="checkbox" checked />
-                <span>Hide past deadlines</span>
-              </label>
+            <!-- past deadlines toggle lives inline in the past-deadlines section -->
             </div>
             <div class="control control--inline">
               <label class="checkbox">
@@ -59,12 +56,8 @@
               <div class="column__sort">
                 <label class="control__label" for="sortKnown">Sort</label>
                 <select id="sortKnown" class="select">
-                  <option value="deadlineAsc">Submission time ↑</option>
-                  <option value="deadlineDesc">Submission time ↓</option>
-                  <option value="countdownAsc">Countdown ↑</option>
-                  <option value="countdownDesc">Countdown ↓</option>
-                  <option value="nameAsc">Name A→Z</option>
-                  <option value="nameDesc">Name Z→A</option>
+                  <option value="deadlineAsc">Deadline ↑</option>
+                  <option value="deadlineDesc">Deadline ↓</option>
                   <option value="coreAsc">CORE ↑</option>
                   <option value="coreDesc">CORE ↓</option>
                 </select>
@@ -74,7 +67,6 @@
               <div class="row row--header" data-view="known">
                 <div class="cell cell--name">Conference</div>
                 <div class="cell cell--deadline">Deadline (AoE)</div>
-                <div class="cell cell--core">CORE</div>
                 <div class="cell cell--tags">Tags</div>
                 <div class="cell cell--countdown">Countdown</div>
                 <div class="cell cell--note">Note</div>
@@ -91,10 +83,8 @@
               <div class="column__sort">
                 <label class="control__label" for="sortTbd">Sort</label>
                 <select id="sortTbd" class="select">
-                  <option value="approxAsc">Approx disclosure date ↑</option>
-                  <option value="approxDesc">Approx disclosure date ↓</option>
-                  <option value="nameAsc">Name A→Z</option>
-                  <option value="nameDesc">Name Z→A</option>
+                  <option value="approxAsc">Approx date ↑</option>
+                  <option value="approxDesc">Approx date ↓</option>
                   <option value="coreAsc">CORE ↑</option>
                   <option value="coreDesc">CORE ↓</option>
                 </select>
@@ -104,7 +94,6 @@
               <div class="row row--header" data-view="tbd">
                 <div class="cell cell--name">Conference</div>
                 <div class="cell cell--deadline">Deadline (AoE)</div>
-                <div class="cell cell--core">CORE</div>
                 <div class="cell cell--tags">Tags</div>
                 <div class="cell cell--note">Note</div>
               </div>

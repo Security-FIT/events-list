@@ -25,6 +25,7 @@ function buildTagGradient(tags) {
 }
 
 const THEME_STORAGE_KEY = "conf_theme"; // "dark" | "light"
+const HIDE_PAST_STORAGE_KEY = "conf_hide_past"; // "1" | "0"
 
 function applyTheme(theme) {
   const t = theme === "light" ? "light" : "dark";
@@ -36,6 +37,25 @@ function applyTheme(theme) {
 function saveTheme(theme) {
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // ignore
+  }
+}
+
+function loadHidePastDefault() {
+  try {
+    const v = localStorage.getItem(HIDE_PAST_STORAGE_KEY);
+    if (v === "0") return false;
+    if (v === "1") return true;
+  } catch {
+    // ignore
+  }
+  return true;
+}
+
+function saveHidePast(value) {
+  try {
+    localStorage.setItem(HIDE_PAST_STORAGE_KEY, value ? "1" : "0");
   } catch {
     // ignore
   }
@@ -99,9 +119,16 @@ function formatAoEParts(epochMs) {
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const mi = String(d.getUTCMinutes()).padStart(2, "0");
   const ss = String(d.getUTCSeconds()).padStart(2, "0");
-  return { date: `${yyyy}-${mm}-${dd}`, time: `${hh}:${mi}:${ss}` };
+  return { date: `${dd}/${mm}/${yyyy}`, time: `${hh}:${mi}:${ss}` };
 }
 
+function formatYmdToDmy(ymd) {
+  // "YYYY-MM-DD" -> "DD/MM/YYYY"
+  const s = String(ymd || "").trim();
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return s;
+  return `${m[3]}/${m[2]}/${m[1]}`;
+}
 function formatCountdown(deltaMs) {
   const sign = deltaMs < 0 ? "-" : "";
   const abs = Math.abs(deltaMs);
@@ -265,6 +292,14 @@ function confRow(conf, { deadlineLines, countdownText = "", deadlineMuted = fals
     (conf.tags || []).map((t) => el("span", { class: "tagChip", text: t, "data-tag": t }))
   );
   const noteText = String(conf.note || "").trim();
+  const coreText = String(conf.core_ranking || "—").trim() || "—";
+  const coreKeyRaw = coreText.toUpperCase().replace(/\s+/g, "");
+  const coreKey =
+    coreKeyRaw === "A*" ? "Astar" :
+    coreKeyRaw === "—" ? "unranked" :
+    coreKeyRaw === "-" ? "unranked" :
+    coreKeyRaw === "" ? "unranked" :
+    coreKeyRaw;
   const nameLink = conf.url
     ? el("a", { href: conf.url, target: "_blank", rel: "noopener noreferrer" }, [
         el("div", { class: "confName", text: conf.name || "(Unnamed)" }),
@@ -275,13 +310,12 @@ function confRow(conf, { deadlineLines, countdownText = "", deadlineMuted = fals
         el("div", { class: "confMeta muted", text: "No URL provided" })
       ]);
 
+  const coreBadge = el("div", { class: `coreBadge coreBadge--${coreKey}`, text: coreText, title: `CORE: ${coreText}` });
+
   const cells = [
-    el("div", { class: "cell cell--name" }, [nameLink]),
+    el("div", { class: "cell cell--name" }, [nameLink, coreBadge]),
     el("div", { class: "cell cell--deadline" }, [
       ...deadlineLines.map((line) => el("div", { class: `deadline ${deadlineMuted ? "muted" : ""}`, text: line }))
-    ]),
-    el("div", { class: "cell cell--core" }, [
-      el("div", { class: "deadline", text: conf.core_ranking || "—" })
     ]),
     el("div", { class: "cell cell--tags" }, [tagChips])
   ];
@@ -348,7 +382,7 @@ function attachExpandableNote(rowEl, noteText) {
   container.appendChild(btn);
 }
 
-function renderKnown(listEl, known, { hidePast }) {
+function renderKnown(listEl, known, { hidePast, knownSort }) {
   const now = nowAoEMs();
   const upcoming = [];
   const past = [];
@@ -359,6 +393,15 @@ function renderKnown(listEl, known, { hidePast }) {
     const deadlineAoEMs = c.deadlineEpochMs - 12 * 60 * 60 * 1000;
     if (deadlineAoEMs < now) past.push(c);
     else upcoming.push(c);
+  }
+
+  // Historical section: invert the deadline ordering so the "past" list reads naturally.
+  // - deadlineAsc (upcoming: soonest first) -> past: most recently missed first
+  // - deadlineDesc (upcoming: farthest first) -> past: oldest first
+  if (knownSort === "deadlineAsc") {
+    past.sort((a, b) => (b.deadlineEpochMs ?? 0) - (a.deadlineEpochMs ?? 0));
+  } else if (knownSort === "deadlineDesc") {
+    past.sort((a, b) => (a.deadlineEpochMs ?? 0) - (b.deadlineEpochMs ?? 0));
   }
 
   listEl.textContent = "";
@@ -378,7 +421,31 @@ function renderKnown(listEl, known, { hidePast }) {
   }
 
   if (past.length > 0) {
-    table.appendChild(el("div", { class: "divider", text: hidePast ? `Past deadlines (${past.length}) — hidden` : `Past deadlines (${past.length})` }));
+    const toggleBtn = el(
+      "button",
+      {
+        type: "button",
+        class: "pastToggle",
+        "aria-expanded": hidePast ? "false" : "true",
+        onClick: () => {
+          window.__HIDE_PAST__ = !window.__HIDE_PAST__;
+          saveHidePast(window.__HIDE_PAST__);
+          // Re-render using latest state
+          if (window.__CONF_DATA__) {
+            const vm = compileViewModel(window.__CONF_DATA__);
+            renderKnown(listEl, vm.known, { hidePast: vm.hidePast });
+          }
+        }
+      },
+      [hidePast ? "Show more" : "Show less"]
+    );
+
+    table.appendChild(
+      el("div", { class: "divider" }, [
+        el("span", { text: `Past deadlines (${past.length})` }),
+        toggleBtn
+      ])
+    );
   }
 
   if (!hidePast) {
@@ -400,7 +467,8 @@ function renderTbd(listEl, tbd) {
 
   for (const c of tbd) {
     const approx = c.submission?.approx_disclosure_date ? String(c.submission.approx_disclosure_date) : "TBD";
-    const deadlineLines = ["TBD", `approx: ${approx}`];
+    const approxPretty = approx === "TBD" ? "TBD" : formatYmdToDmy(approx);
+    const deadlineLines = ["TBD", `approx: ${approxPretty}`];
     const noteText = String(c.note || "—");
     const row = confRow(c, { deadlineLines, deadlineMuted: true, view: "tbd" });
     table.appendChild(row);
@@ -426,7 +494,7 @@ function setStatus(text) {
 function compileViewModel(all) {
   const selected = selectedTags();
   const matchAll = Boolean(document.getElementById("showOnlySelectedTags")?.checked);
-  const hidePast = Boolean(document.getElementById("hidePast")?.checked);
+  const hidePast = window.__HIDE_PAST__ ?? true;
   const knownSort = String(document.getElementById("sortKnown")?.value ?? "deadlineAsc");
   const tbdSort = String(document.getElementById("sortTbd")?.value ?? "approxAsc");
 
@@ -439,6 +507,7 @@ function compileViewModel(all) {
     hidePast,
     known: sortKnown(known, knownSort),
     tbd: sortTbd(tbd, tbdSort),
+    knownSort,
     counts: { total: all.length, filtered: filtered.length, known: known.length, tbd: tbd.length }
   };
 }
@@ -464,13 +533,15 @@ async function main() {
   const savedTheme = loadSavedTheme();
   applyTheme(savedTheme ?? systemTheme());
 
+  window.__HIDE_PAST__ = loadHidePastDefault();
+
   const knownList = document.getElementById("knownList");
   const tbdList = document.getElementById("tbdList");
 
   const rerender = () => {
     if (!window.__CONF_DATA__) return;
     const vm = compileViewModel(window.__CONF_DATA__);
-    renderKnown(knownList, vm.known, { hidePast: vm.hidePast });
+    renderKnown(knownList, vm.known, { hidePast: vm.hidePast, knownSort: vm.knownSort });
     renderTbd(tbdList, vm.tbd);
     setStatus(`Showing ${vm.counts.filtered}/${vm.counts.total} • Known: ${vm.counts.known} • TBD: ${vm.counts.tbd}`);
     window.__CONF_BY_ID__ = new Map(window.__CONF_DATA__.map(c => [c.id, c]));
@@ -485,7 +556,6 @@ async function main() {
   for (const tag of TAGS) {
     bind(`input[data-tag="${tag}"]`, "change", rerender);
   }
-  bind("#hidePast", "change", rerender);
   bind("#showOnlySelectedTags", "change", rerender);
   bind("#sortKnown", "change", rerender);
   bind("#sortTbd", "change", rerender);
