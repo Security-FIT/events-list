@@ -5,6 +5,8 @@ Minimal static site that loads conferences from `conferences.json` and displays:
 - **TBD deadlines** (right column) with optional approximate disclosure date
 - **Tag filters** (LLMs, Security, Biometrics, Speech, Usability)
 
+It also supports a **Journals** view loaded from `journals.json`.
+
 ### `conferences.json` format
 
 Top-level may be either:
@@ -72,3 +74,16 @@ TBD deadline:
 - Notes:
   - Notes are shown in the **Note** column via the top-level `note` field.
 
+### `journals.json` format
+
+Top-level may be either:
+- `{ "journals": [ ... ] }` (recommended), or
+- `[ ... ]` (array directly)
+
+Each journal has:
+- `name` (string)
+- `url` (string)
+- `sjr` (string) — one of: `Q1`, `Q2`, `Q3`, `Q4`, `D1` (or `""`/`-` if unknown)
+- `tags` (array of strings)
+- `note` (string)
+- `id` (optional string)

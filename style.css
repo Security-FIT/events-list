@@ -36,6 +36,10 @@ html[data-theme="dark"] {
 
 * { box-sizing: border-box; }
 
+[hidden] {
+  display: none !important;
+}
+
 html, body {
   height: 100%;
 }
@@ -258,6 +262,79 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   display: grid;
   gap: 6px;
 }
+
+.viewSwitchSection {
+  padding-top: 4px;
+  padding-bottom: 10px;
+}
+
+.viewSwitch {
+  display: inline-flex;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.viewSwitch__btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.viewSwitch__btn[aria-selected="true"] {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.journalsView {
+  padding-bottom: 16px;
+}
+
+.journalsColumn {
+  min-height: auto;
+}
+
+.row[data-view="journals"] {
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    minmax(0, 1fr)
+    minmax(0, 1.2fr);
+}
+
+.table--header .row--header[data-view="journals"] {
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    minmax(0, 1fr)
+    minmax(0, 1.2fr);
+}
+
+.sjrBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+
+.sjrBadge--D1 { border-color: color-mix(in srgb, #f2c14e 55%, var(--border)); color: color-mix(in srgb, #f2c14e 75%, var(--text)); }
+.sjrBadge--Q1 { border-color: color-mix(in srgb, #7ae0b8 45%, var(--border)); color: color-mix(in srgb, #7ae0b8 70%, var(--text)); }
+.sjrBadge--Q2 { border-color: color-mix(in srgb, #7aa2ff 45%, var(--border)); color: color-mix(in srgb, #7aa2ff 70%, var(--text)); }
+.sjrBadge--Q3 { border-color: color-mix(in srgb, #ffd37a 45%, var(--border)); color: color-mix(in srgb, #ffd37a 70%, var(--text)); }
+.sjrBadge--Q4 { border-color: color-mix(in srgb, #c78bff 45%, var(--border)); color: color-mix(in srgb, #c78bff 70%, var(--text)); }
+.sjrBadge--unranked { border-color: var(--border); color: var(--muted); }
 
 .columns {
   display: grid;
@@ -582,7 +659,6 @@ html[data-theme="light"] {
     grid-template-areas:
       "name name"
       "deadline deadline"
-      "core core"
       "tags tags"
       "note note";
   }
@@ -593,6 +669,14 @@ html[data-theme="light"] {
   .row .cell--tags { grid-area: tags; }
   .row .cell--note { grid-area: note; }
   .row[data-view="known"] .cell--countdown { grid-area: countdown; }
+
+  .row[data-view="journals"] {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "name"
+      "tags"
+      "note";
+  }
 
   .cell--deadline .deadline {
     white-space: normal;

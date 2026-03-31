@@ -1,0 +1,19 @@
+{
+  "journals": [
+    {
+      "name": "TEST Journal of Blockchain Security",
+      "url": "https://example.com/journal-blockchain-security",
+      "sjr": "Q1",
+      "tags": ["Security", "Blockchain"],
+      "note": ""
+    },
+    {
+      "name": "TEST Journal of Speech & LLM Systems",
+      "url": "https://example.com/journal-speech-llms",
+      "sjr": "D1",
+      "tags": ["Speech", "LLMs"],
+      "note": "Rolling submissions."
+    }
+  ]
+}
+

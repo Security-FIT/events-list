@@ -27,6 +27,7 @@ function buildTagGradient(tags) {
 const THEME_STORAGE_KEY = "conf_theme"; // "dark" | "light"
 const HIDE_PAST_STORAGE_KEY = "conf_hide_past"; // "1" | "0"
 const SEARCH_STORAGE_KEY = "conf_search"; // persisted query
+const VIEW_STORAGE_KEY = "conf_view"; // "conferences" | "journals"
 
 function applyTheme(theme) {
   const t = theme === "light" ? "light" : "dark";
@@ -123,6 +124,24 @@ function loadSearchDefault() {
 function saveSearch(value) {
   try {
     localStorage.setItem(SEARCH_STORAGE_KEY, String(value || ""));
+  } catch {
+    // ignore
+  }
+}
+
+function loadViewDefault() {
+  try {
+    const v = localStorage.getItem(VIEW_STORAGE_KEY);
+    if (v === "journals" || v === "conferences") return v;
+  } catch {
+    // ignore
+  }
+  return "conferences";
+}
+
+function saveView(v) {
+  try {
+    localStorage.setItem(VIEW_STORAGE_KEY, v);
   } catch {
     // ignore
   }
@@ -553,6 +572,45 @@ async function loadConfig() {
   return arr;
 }
 
+async function loadJournals() {
+  const res = await fetch("./journals.json", { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to load journals.json (${res.status})`);
+  const data = await res.json();
+  const arr = Array.isArray(data) ? data : Array.isArray(data?.journals) ? data.journals : [];
+  return arr;
+}
+
+function normalizeJournal(raw, idx) {
+  return {
+    id: raw?.id ? String(raw.id) : `${idx}-${String(raw?.name ?? "journal")}`,
+    name: String(raw?.name ?? "").trim(),
+    url: String(raw?.url ?? "").trim(),
+    sjr: String(raw?.sjr ?? "").trim(),
+    tags: Array.isArray(raw?.tags) ? raw.tags.map(String) : [],
+    note: raw?.note != null ? String(raw.note) : ""
+  };
+}
+
+function sjrScore(sjr) {
+  const s = String(sjr || "").toUpperCase().trim();
+  if (s === "D1") return 6;
+  if (s === "Q1") return 5;
+  if (s === "Q2") return 4;
+  if (s === "Q3") return 3;
+  if (s === "Q4") return 2;
+  if (s) return 1;
+  return 0;
+}
+
+function sortJournals(items, mode) {
+  const dir = mode.endsWith("Desc") ? -1 : 1;
+  const key = mode.replace(/(Asc|Desc)$/, "");
+  const byName = (a, b) => a.name.localeCompare(b.name);
+  const bySjr = (a, b) => sjrScore(a.sjr) - sjrScore(b.sjr);
+  const cmp = key === "name" ? byName : bySjr;
+  return [...items].sort((a, b) => dir * cmp(a, b));
+}
+
 function setStatus(text) {
   const elStatus = document.getElementById("statusText");
   if (elStatus) elStatus.textContent = text;
@@ -590,6 +648,60 @@ function compileViewModel(all) {
   };
 }
 
+function compileJournalsViewModel(allJournals) {
+  const selected = selectedTags();
+  const matchAll = Boolean(document.getElementById("showOnlySelectedTags")?.checked);
+  const q = String(window.__SEARCH_QUERY__ || "").trim();
+  const sortMode = String(document.getElementById("sortJournals")?.value ?? "sjrDesc");
+
+  let filtered = allJournals.filter(j => tagMatches(j, selected, matchAll));
+  if (q) {
+    filtered = filtered
+      .map((j) => ({ j, s: fuzzyScore(q, j.name) }))
+      .filter((x) => Number.isFinite(x.s))
+      .sort((a, b) => b.s - a.s)
+      .map((x) => x.j);
+  }
+
+  return { journals: sortJournals(filtered, sortMode), counts: { total: allJournals.length, filtered: filtered.length } };
+}
+
+function confRowJournals(j) {
+  const sjrText = String(j.sjr || "—").trim() || "—";
+  const sjrKeyRaw = sjrText.toUpperCase().replace(/\s+/g, "");
+  const sjrKey = sjrKeyRaw || "unranked";
+  const nameLink = j.url
+    ? el("a", { href: j.url, target: "_blank", rel: "noopener noreferrer" }, [
+        el("div", { class: "confName", text: j.name || "(Unnamed)" }),
+        el("div", { class: "confMeta", text: j.url })
+      ])
+    : el("div", {}, [
+        el("div", { class: "confName", text: j.name || "(Unnamed)" }),
+        el("div", { class: "confMeta muted", text: "No URL provided" })
+      ]);
+
+  const badge = el("div", { class: `sjrBadge sjrBadge--${sjrKey}`, text: sjrText, title: `SJR: ${sjrText}` });
+  const tagChips = el("div", { class: "tagList" }, (j.tags || []).map((t) => el("span", { class: "tagChip", text: t, "data-tag": t })));
+  const noteText = String(j.note || "").trim();
+
+  return el("div", { class: "row", "data-view": "journals", "data-id": j.id }, [
+    el("div", { class: "cell cell--name" }, [nameLink, badge]),
+    el("div", { class: "cell cell--tags" }, [tagChips]),
+    el("div", { class: "cell cell--note" }, [el("div", { class: "noteText", text: noteText || "—" })])
+  ]);
+}
+
+function renderJournals(listEl, journals) {
+  listEl.textContent = "";
+  const table = el("div", { class: "table" });
+  for (const j of journals) {
+    const row = confRowJournals(j);
+    table.appendChild(row);
+    attachExpandableNote(row, String(j.note || ""));
+  }
+  listEl.appendChild(table);
+}
+
 function tickCountdowns(containerEl, confById) {
   // Recompute countdown + deadline state for visible known rows only.
   const rows = containerEl.querySelectorAll('.row[data-view="known"][data-id]');
@@ -613,17 +725,39 @@ async function main() {
 
   window.__HIDE_PAST__ = loadHidePastDefault();
   window.__SEARCH_QUERY__ = loadSearchDefault();
+  window.__VIEW__ = loadViewDefault();
 
   const knownList = document.getElementById("knownList");
   const tbdList = document.getElementById("tbdList");
+  const journalsView = document.getElementById("journalsView");
+  const columnsView = document.querySelector(".columns");
+  const journalsList = document.getElementById("journalsList");
+  const btnConfs = document.getElementById("viewConfs");
+  const btnJournals = document.getElementById("viewJournals");
 
   const rerender = () => {
+    if (window.__VIEW__ === "journals") {
+      if (!window.__JOURNAL_DATA__) return;
+      const vm = compileJournalsViewModel(window.__JOURNAL_DATA__);
+      renderJournals(journalsList, vm.journals);
+      setStatus(`Journals: ${vm.counts.filtered}/${vm.counts.total}`);
+      if (columnsView) columnsView.hidden = true;
+      if (journalsView) journalsView.hidden = false;
+      if (btnConfs) btnConfs.setAttribute("aria-selected", "false");
+      if (btnJournals) btnJournals.setAttribute("aria-selected", "true");
+      return;
+    }
+
     if (!window.__CONF_DATA__) return;
     const vm = compileViewModel(window.__CONF_DATA__);
     renderKnown(knownList, vm.known, { hidePast: vm.hidePast, knownSort: vm.knownSort });
     renderTbd(tbdList, vm.tbd);
     setStatus(`Showing ${vm.counts.filtered}/${vm.counts.total} • Known: ${vm.counts.known} • TBD: ${vm.counts.tbd}`);
     window.__CONF_BY_ID__ = new Map(window.__CONF_DATA__.map(c => [c.id, c]));
+    if (columnsView) columnsView.hidden = false;
+    if (journalsView) journalsView.hidden = true;
+    if (btnConfs) btnConfs.setAttribute("aria-selected", "true");
+    if (btnJournals) btnJournals.setAttribute("aria-selected", "false");
   };
 
   const bind = (sel, ev, fn) => {
@@ -638,6 +772,7 @@ async function main() {
   bind("#showOnlySelectedTags", "change", rerender);
   bind("#sortKnown", "change", rerender);
   bind("#sortTbd", "change", rerender);
+  bind("#sortJournals", "change", rerender);
 
   // Search box (debounced)
   const searchEl = document.getElementById("searchBox");
@@ -659,6 +794,17 @@ async function main() {
     saveTheme(t);
   });
 
+  bind("#viewConfs", "click", () => {
+    window.__VIEW__ = "conferences";
+    saveView("conferences");
+    rerender();
+  });
+  bind("#viewJournals", "click", () => {
+    window.__VIEW__ = "journals";
+    saveView("journals");
+    rerender();
+  });
+
   // If user hasn't overridden theme, follow system changes live.
   if (!savedTheme && window.matchMedia) {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -671,11 +817,20 @@ async function main() {
   try {
     const raw = await loadConfig();
     window.__CONF_DATA__ = raw.map(normalizeConference);
-    rerender();
   } catch (e) {
     setStatus(String(e?.message ?? e));
     return;
   }
+
+  try {
+    const rawJ = await loadJournals();
+    window.__JOURNAL_DATA__ = rawJ.map(normalizeJournal);
+  } catch (e) {
+    // Journals optional; if missing, just don't show them.
+    window.__JOURNAL_DATA__ = [];
+  }
+
+  rerender();
 
   // Live countdown refresh (only affects known list).
   setInterval(() => {

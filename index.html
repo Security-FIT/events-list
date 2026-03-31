@@ -64,6 +64,12 @@
     </section>
 
     <main class="main">
+      <section class="container viewSwitchSection" aria-label="View switch">
+        <div class="viewSwitch" role="tablist" aria-label="Conferences and journals">
+          <button id="viewConfs" class="viewSwitch__btn" type="button" role="tab" aria-selected="true">Conferences</button>
+          <button id="viewJournals" class="viewSwitch__btn" type="button" role="tab" aria-selected="false">Journals</button>
+        </div>
+      </section>
       <section class="container columns" role="region" aria-label="Conference lists">
         <div class="column">
           <div class="column__header">
@@ -116,6 +122,33 @@
             </div>
           </div>
           <div id="tbdList" class="column__body" role="region" aria-label="TBD submission deadlines list" tabindex="0"></div>
+        </div>
+      </section>
+
+      <section id="journalsView" class="container journalsView" role="region" aria-label="Journal list" hidden>
+        <div class="column journalsColumn">
+          <div class="column__header">
+            <div class="column__titleRow">
+              <h2 class="column__title">Journals</h2>
+              <div class="column__sort">
+                <label class="control__label" for="sortJournals">Sort</label>
+                <select id="sortJournals" class="select">
+                  <option value="sjrDesc">SJR ↓</option>
+                  <option value="sjrAsc">SJR ↑</option>
+                  <option value="nameAsc">Name A→Z</option>
+                  <option value="nameDesc">Name Z→A</option>
+                </select>
+              </div>
+            </div>
+            <div class="table table--header" aria-hidden="true">
+              <div class="row row--header" data-view="journals">
+                <div class="cell cell--name">Journal</div>
+                <div class="cell cell--tags">Tags</div>
+                <div class="cell cell--note">Note</div>
+              </div>
+            </div>
+          </div>
+          <div id="journalsList" class="column__body" role="region" aria-label="Journals list" tabindex="0"></div>
         </div>
       </section>
     </main>
