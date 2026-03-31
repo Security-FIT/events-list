@@ -1,7 +1,23 @@
 // Minimal static app: loads ./conferences.json and renders two independently sortable/scrollable columns.
 // Deadlines are interpreted in Anywhere-on-Earth (AoE), i.e., UTC-12.
 
-const TAGS = ["LLMs", "Security", "Biometrics", "Speech", "Usability", "Blockchain"];
+const TAGS = ["LLMs", "Security", "Biometrics", "Speech", "Usability", "Blockchain", "Quantum", "Post-Quantum"];
+
+const TAG_META = {
+  "LLMs": { emoji: "🤖" },
+  "Security": { emoji: "🔐" },
+  "Biometrics": { emoji: "🧬" },
+  "Speech": { emoji: "🗣️" },
+  "Usability": { emoji: "🧠" },
+  "Blockchain": { emoji: "⛓️" },
+  "Quantum": { emoji: "⚛️" },
+  "Post-Quantum": { emoji: "🛡️" }
+};
+
+function tagDisplay(tag) {
+  const e = TAG_META?.[tag]?.emoji;
+  return e ? `${e} ${tag}` : tag;
+}
 
 function tagToCssVar(tag) {
   switch (tag) {
@@ -11,6 +27,8 @@ function tagToCssVar(tag) {
     case "Speech": return "var(--tag-speech)";
     case "Usability": return "var(--tag-usability)";
     case "Blockchain": return "var(--tag-blockchain)";
+    case "Quantum": return "var(--tag-quantum)";
+    case "Post-Quantum": return "var(--tag-post-quantum)";
     default: return null;
   }
 }
@@ -145,6 +163,19 @@ function saveView(v) {
   } catch {
     // ignore
   }
+}
+
+function bindFilterToggle() {
+  const btn = document.getElementById("filterToggle");
+  const panel = document.getElementById("filtersPanel");
+  if (!btn || !panel) return;
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+  // Default collapsed.
+  setOpen(false);
+  btn.addEventListener("click", () => setOpen(panel.hidden));
 }
 
 function loadSavedTheme() {
@@ -365,7 +396,7 @@ function renderTagFilter() {
   for (const tag of TAGS) {
     const id = `tag-${tag}`;
     const input = el("input", { type: "checkbox", id, "data-tag": tag });
-    const label = el("label", { class: "tagPill", for: id }, [input, el("span", { text: tag })]);
+    const label = el("label", { class: "tagPill", for: id }, [input, el("span", { text: tagDisplay(tag) })]);
     root.appendChild(label);
   }
 }
@@ -375,7 +406,7 @@ function confRow(conf, { deadlineLines, countdownText = "", deadlineMuted = fals
   const tagChips = el(
     "div",
     { class: "tagList" },
-    (conf.tags || []).map((t) => el("span", { class: "tagChip", text: t, "data-tag": t }))
+    (conf.tags || []).map((t) => el("span", { class: "tagChip", text: tagDisplay(t), "data-tag": t }))
   );
   const noteText = String(conf.note || "").trim();
   const coreText = String(conf.core_ranking || "—").trim() || "—";
@@ -681,7 +712,7 @@ function confRowJournals(j) {
       ]);
 
   const badge = el("div", { class: `sjrBadge sjrBadge--${sjrKey}`, text: sjrText, title: `SJR: ${sjrText}` });
-  const tagChips = el("div", { class: "tagList" }, (j.tags || []).map((t) => el("span", { class: "tagChip", text: t, "data-tag": t })));
+  const tagChips = el("div", { class: "tagList" }, (j.tags || []).map((t) => el("span", { class: "tagChip", text: tagDisplay(t), "data-tag": t })));
   const noteText = String(j.note || "").trim();
 
   return el("div", { class: "row", "data-view": "journals", "data-id": j.id }, [
@@ -787,6 +818,8 @@ async function main() {
       t = setTimeout(rerender, 120);
     });
   }
+
+  bindFilterToggle();
   bind("#darkMode", "change", (e) => {
     const checked = Boolean(e?.target?.checked);
     const t = checked ? "dark" : "light";

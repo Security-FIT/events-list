@@ -19,7 +19,7 @@ Each conference has **exactly these items**:
 - `submission` (object) — either known AoE datetime or TBD
 - `note` (string, optional) — shown in the Note column (if omitted, `—` is shown)
 - `core_ranking` (string) — e.g. `"A*"`, `"A"`, `"B"`, `"C"`
-- `tags` (array of strings) — subset of: `LLMs`, `Security`, `Biometrics`, `Speech`, `Usability`, `Blockchain`
+- `tags` (array of strings) — subset of: `LLMs`, `Security`, `Biometrics`, `Speech`, `Usability`, `Blockchain`, `Quantum`, `Post-Quantum`
 - `id` (optional string) — stable ID; if omitted we auto-generate one
 
 Known deadline (AoE wall-clock, interpreted as UTC−12):

@@ -27,18 +27,11 @@
         </div>
         <div class="header__right">
           <div class="controls">
-            <div class="control">
-              <label class="control__label" for="tagFilter">Tags</label>
-              <div id="tagFilter" class="tagFilter" aria-label="Tag filters"></div>
-            </div>
             <div class="control control--inline">
             <!-- past deadlines toggle lives inline in the past-deadlines section -->
             </div>
             <div class="control control--inline">
-              <label class="checkbox">
-                <input id="showOnlySelectedTags" type="checkbox" />
-                <span>Match all selected tags</span>
-              </label>
+            <!-- filters moved under search -->
             </div>
             <div class="control control--inline">
               <!-- theme toggle moved to emoji button in header top-right -->
@@ -60,6 +53,21 @@
           autocomplete="off"
           spellcheck="false"
         />
+        <button id="filterToggle" class="btn btn--ghost" type="button" aria-expanded="false" aria-controls="filtersPanel">
+          Filter
+        </button>
+        <div id="filtersPanel" class="filtersPanel" hidden>
+          <div class="control">
+            <label class="control__label" for="tagFilter">Tags</label>
+            <div id="tagFilter" class="tagFilter" aria-label="Tag filters"></div>
+          </div>
+          <div class="control control--inline">
+            <label class="checkbox">
+              <input id="showOnlySelectedTags" type="checkbox" />
+              <span>Match all selected tags</span>
+            </label>
+          </div>
+        </div>
       </div>
     </section>
 

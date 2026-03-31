@@ -196,6 +196,11 @@ a { color: inherit; }
   margin: 0;
 }
 
+.tagPill span,
+.tagChip {
+  letter-spacing: 0;
+}
+
 .checkbox {
   display: inline-flex;
   align-items: center;
@@ -261,6 +266,26 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 .searchSection__inner {
   display: grid;
   gap: 6px;
+}
+
+.filtersPanel {
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: grid;
+  gap: 10px;
+}
+
+.btn--ghost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn--ghost:hover {
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
 }
 
 .viewSwitchSection {
@@ -541,6 +566,8 @@ html[data-theme="dark"], :root {
   --tag-speech: #ffd37a;
   --tag-usability: #c78bff;
   --tag-blockchain: #7ad7ff;
+  --tag-quantum: #ff9df0;
+  --tag-post-quantum: #9dffb8;
 }
 
 html[data-theme="light"] {
@@ -550,6 +577,8 @@ html[data-theme="light"] {
   --tag-speech: #b87400;
   --tag-usability: #7a2cff;
   --tag-blockchain: #006e93;
+  --tag-quantum: #a4008f;
+  --tag-post-quantum: #0a7a3a;
 }
 
 .tagChip[data-tag="LLMs"] { border-color: color-mix(in srgb, var(--tag-llms) 40%, var(--border)); color: color-mix(in srgb, var(--tag-llms) 70%, var(--muted)); }
@@ -558,6 +587,8 @@ html[data-theme="light"] {
 .tagChip[data-tag="Speech"] { border-color: color-mix(in srgb, var(--tag-speech) 40%, var(--border)); color: color-mix(in srgb, var(--tag-speech) 70%, var(--muted)); }
 .tagChip[data-tag="Usability"] { border-color: color-mix(in srgb, var(--tag-usability) 40%, var(--border)); color: color-mix(in srgb, var(--tag-usability) 70%, var(--muted)); }
 .tagChip[data-tag="Blockchain"] { border-color: color-mix(in srgb, var(--tag-blockchain) 40%, var(--border)); color: color-mix(in srgb, var(--tag-blockchain) 70%, var(--muted)); }
+.tagChip[data-tag="Quantum"] { border-color: color-mix(in srgb, var(--tag-quantum) 40%, var(--border)); color: color-mix(in srgb, var(--tag-quantum) 70%, var(--muted)); }
+.tagChip[data-tag="Post-Quantum"] { border-color: color-mix(in srgb, var(--tag-post-quantum) 40%, var(--border)); color: color-mix(in srgb, var(--tag-post-quantum) 70%, var(--muted)); }
 
 /* Left accent is now a per-row gradient computed in JS via --tag-gradient. */
 
