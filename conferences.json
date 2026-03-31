@@ -254,19 +254,6 @@
         "Blockchain"
       ],
       "note": ""
-    },
-    {
-      "name": "AFT 2026",
-      "url": "https://aft.ifca.ai/aft26/CFP.html",
-      "submission": {
-        "type": "datetime_aot",
-        "aot": "2026-05-20T23:59:59"
-      },
-      "core_ranking": "",
-      "tags": [
-        "Blockchain"
-      ],
-      "note": ""
     }
   ]
 }
