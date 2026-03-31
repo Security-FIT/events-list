@@ -317,8 +317,8 @@ function normalizeConference(raw, idx) {
   }
 
   if (submission?.type === "tbd") {
-    const approx = String(submission.approx_disclosure_date ?? "").trim(); // YYYY-MM-DD
-    const approxEpochMs = approx ? Date.parse(`${approx}T00:00:00Z`) : null;
+    const date = String(submission.date ?? "").trim(); // YYYY-MM-DD
+    const approxEpochMs = date ? Date.parse(`${date}T00:00:00Z`) : null;
     return { ...base, kind: "tbd", approxDisclosureEpochMs: Number.isNaN(approxEpochMs) ? null : approxEpochMs };
   }
 
@@ -584,7 +584,7 @@ function renderTbd(listEl, tbd) {
   const table = el("div", { class: "table" });
 
   for (const c of tbd) {
-    const approx = c.submission?.approx_disclosure_date ? String(c.submission.approx_disclosure_date) : "TBD";
+    const approx = c.submission?.date ? String(c.submission.date) : "TBD";
     const approxPretty = approx === "TBD" ? "TBD" : formatYmdToDmy(approx);
     const deadlineLines = ["TBD", `approx: ${approxPretty}`];
     const noteText = String(c.note || "—");

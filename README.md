@@ -57,7 +57,7 @@ TBD deadline:
   "note": "Usually announced early June",
   "submission": {
     "type": "tbd",
-    "approx_disclosure_date": "2026-06-01"
+    "date": "2026-06-01"
   },
   "core_ranking": "B",
   "tags": ["Speech"]

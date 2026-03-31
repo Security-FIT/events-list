@@ -1,19 +1,22 @@
 {
   "journals": [
     {
-      "name": "TEST Journal of Blockchain Security",
-      "url": "https://example.com/journal-blockchain-security",
+      "name": "Journal of Information Security and Applications",
+      "url": "https://www.sciencedirect.com/journal/journal-of-information-security-and-applications",
       "sjr": "Q1",
-      "tags": ["Security", "Blockchain"],
-      "note": ""
+      "tags": [
+        "Cybersecurity"
+      ],
+      "note": "Rolling submissions."
     },
     {
-      "name": "TEST Journal of Speech & LLM Systems",
-      "url": "https://example.com/journal-speech-llms",
-      "sjr": "D1",
-      "tags": ["Speech", "LLMs"],
+      "name": "Engineering Applications of Artificial Intelligence",
+      "url": "https://www.scimagojr.com/journalsearch.php?q=24182&tip=sid&clean=0",
+      "sjr": "Q1",
+      "tags": [
+        "Artificial Intelligence"
+      ],
       "note": "Rolling submissions."
     }
   ]
 }
-
