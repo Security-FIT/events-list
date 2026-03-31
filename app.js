@@ -26,6 +26,7 @@ function buildTagGradient(tags) {
 
 const THEME_STORAGE_KEY = "conf_theme"; // "dark" | "light"
 const HIDE_PAST_STORAGE_KEY = "conf_hide_past"; // "1" | "0"
+const SEARCH_STORAGE_KEY = "conf_search"; // persisted query
 
 function applyTheme(theme) {
   const t = theme === "light" ? "light" : "dark";
@@ -56,6 +57,72 @@ function loadHidePastDefault() {
 function saveHidePast(value) {
   try {
     localStorage.setItem(HIDE_PAST_STORAGE_KEY, value ? "1" : "0");
+  } catch {
+    // ignore
+  }
+}
+
+function normalizeForSearch(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function isSubsequence(needle, haystack) {
+  // Returns true if all chars in needle appear in order in haystack.
+  let i = 0;
+  for (let j = 0; j < haystack.length && i < needle.length; j++) {
+    if (haystack[j] === needle[i]) i++;
+  }
+  return i === needle.length;
+}
+
+function fuzzyScore(queryRaw, nameRaw) {
+  const q = normalizeForSearch(queryRaw);
+  const n = normalizeForSearch(nameRaw);
+  if (!q) return 0;
+  if (!n) return Number.NEGATIVE_INFINITY;
+
+  if (n === q) return 1000;
+  if (n.startsWith(q)) return 800 - (n.length - q.length);
+  if (n.includes(q)) return 600 - (n.length - q.length);
+
+  const qTokens = q.split(/\s+/).filter(Boolean);
+  const nTokens = n.split(/\s+/).filter(Boolean);
+
+  // Token prefix matches (e.g., "use sec" -> "usenix security")
+  let tokenScore = 0;
+  for (const qt of qTokens) {
+    let best = 0;
+    for (const nt of nTokens) {
+      if (nt === qt) best = Math.max(best, 120);
+      else if (nt.startsWith(qt)) best = Math.max(best, 90);
+    }
+    tokenScore += best;
+  }
+
+  // Subsequence fallback for abbreviations/typos (e.g., "usxsc" -> "usenix security")
+  const subseq = isSubsequence(q.replace(/\s+/g, ""), n.replace(/\s+/g, "")) ? 80 : 0;
+  const lenPenalty = Math.max(0, (n.length - q.length)) * 0.5;
+
+  const score = tokenScore + subseq - lenPenalty;
+  return score > 0 ? score : Number.NEGATIVE_INFINITY;
+}
+
+function loadSearchDefault() {
+  try {
+    return String(localStorage.getItem(SEARCH_STORAGE_KEY) || "");
+  } catch {
+    return "";
+  }
+}
+
+function saveSearch(value) {
+  try {
+    localStorage.setItem(SEARCH_STORAGE_KEY, String(value || ""));
   } catch {
     // ignore
   }
@@ -495,10 +562,21 @@ function compileViewModel(all) {
   const selected = selectedTags();
   const matchAll = Boolean(document.getElementById("showOnlySelectedTags")?.checked);
   const hidePast = window.__HIDE_PAST__ ?? true;
+  const q = String(window.__SEARCH_QUERY__ || "").trim();
   const knownSort = String(document.getElementById("sortKnown")?.value ?? "deadlineAsc");
   const tbdSort = String(document.getElementById("sortTbd")?.value ?? "approxAsc");
 
-  const filtered = all.filter(c => tagMatches(c, selected, matchAll));
+  // Tag filtering
+  let filtered = all.filter(c => tagMatches(c, selected, matchAll));
+
+  // Name search (filter + mild ranking boost)
+  if (q) {
+    filtered = filtered
+      .map((c) => ({ c, s: fuzzyScore(q, c.name) }))
+      .filter((x) => Number.isFinite(x.s))
+      .sort((a, b) => b.s - a.s)
+      .map((x) => x.c);
+  }
 
   const known = filtered.filter(c => c.kind === "known" && c.deadlineEpochMs);
   const tbd = filtered.filter(c => c.kind === "tbd" || !c.deadlineEpochMs);
@@ -534,6 +612,7 @@ async function main() {
   applyTheme(savedTheme ?? systemTheme());
 
   window.__HIDE_PAST__ = loadHidePastDefault();
+  window.__SEARCH_QUERY__ = loadSearchDefault();
 
   const knownList = document.getElementById("knownList");
   const tbdList = document.getElementById("tbdList");
@@ -559,6 +638,20 @@ async function main() {
   bind("#showOnlySelectedTags", "change", rerender);
   bind("#sortKnown", "change", rerender);
   bind("#sortTbd", "change", rerender);
+
+  // Search box (debounced)
+  const searchEl = document.getElementById("searchBox");
+  if (searchEl) {
+    searchEl.value = window.__SEARCH_QUERY__ || "";
+    let t = null;
+    searchEl.addEventListener("input", () => {
+      const next = String(searchEl.value || "");
+      window.__SEARCH_QUERY__ = next;
+      saveSearch(next);
+      if (t) clearTimeout(t);
+      t = setTimeout(rerender, 120);
+    });
+  }
   bind("#darkMode", "change", (e) => {
     const checked = Boolean(e?.target?.checked);
     const t = checked ? "dark" : "light";
