@@ -29,24 +29,30 @@ const THEME_STORAGE_KEY = "conf_theme"; // "dark" | "light"
 function applyTheme(theme) {
   const t = theme === "light" ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", t);
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, t);
-  } catch {
-    // ignore
-  }
   const cb = document.getElementById("darkMode");
   if (cb) cb.checked = t === "dark";
 }
 
-function loadTheme() {
-  // Default: DARK (user requirement), regardless of OS preference.
+function saveTheme(theme) {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // ignore
+  }
+}
+
+function loadSavedTheme() {
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (saved === "light" || saved === "dark") return saved;
   } catch {
     // ignore
   }
-  return "dark";
+  return null;
+}
+
+function systemTheme() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 /** AoE "now" in ms since epoch */
@@ -455,7 +461,8 @@ function tickCountdowns(containerEl, confById) {
 async function main() {
   renderTagFilter();
 
-  applyTheme(loadTheme());
+  const savedTheme = loadSavedTheme();
+  applyTheme(savedTheme ?? systemTheme());
 
   const knownList = document.getElementById("knownList");
   const tbdList = document.getElementById("tbdList");
@@ -484,8 +491,18 @@ async function main() {
   bind("#sortTbd", "change", rerender);
   bind("#darkMode", "change", (e) => {
     const checked = Boolean(e?.target?.checked);
-    applyTheme(checked ? "dark" : "light");
+    const t = checked ? "dark" : "light";
+    applyTheme(t);
+    saveTheme(t);
   });
+
+  // If user hasn't overridden theme, follow system changes live.
+  if (!savedTheme && window.matchMedia) {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyTheme(systemTheme());
+    if (typeof mq.addEventListener === "function") mq.addEventListener("change", handler);
+    else if (typeof mq.addListener === "function") mq.addListener(handler);
+  }
   bind("#refreshBtn", "click", async () => {
     setStatus("Refreshing…");
     try {
