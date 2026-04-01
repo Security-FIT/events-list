@@ -377,17 +377,30 @@
       "note": "Main paper deadline from the BIOSIG 2026 CFP."
     },
     {
-      "name": "IEEE FG 2026",
+      "name": "IEEE FG 2026 (Cycle 1)",
       "url": "https://ieee-biometrics.org/conferences/flagship/fg/",
       "submission": {
-        "type": "tbd",
-        "date": ""
+        "type": "datetime_aot",
+        "aot": "2025-10-02T23:59:59"
       },
       "core_ranking": "B",
       "tags": [
         "Biometrics"
       ],
-      "note": "FG 2026 is announced, but the official year-specific site did not expose machine-readable important dates to the crawler, so this entry is left as TBD."
+      "note": "Cycle 1 paper submission deadline."
+    },
+    {
+      "name": "IEEE FG 2026 (Cycle 2)",
+      "url": "https://ieee-biometrics.org/conferences/flagship/fg/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-15T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "Biometrics"
+      ],
+      "note": "Cycle 2 paper submission deadline."
     },
     {
       "name": "WACV 2025 (Round 1)",
