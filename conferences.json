@@ -526,6 +526,19 @@
         "Security"
       ],
       "note": "Main conference full paper deadline. Abstract and workshop proposal deadline is February 14, 2025."
+    },
+    {
+      "name": "IJCB 2026",
+      "url": "https://ijcb2026.ieee-biometrics.org/",
+      "tags": [
+        "Biometrics",
+        "Speech"
+      ],
+      "note": "Notification of paper acceptance: June 10, 2026",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-10T23:59:59"
+      }
     }
   ]
 }
