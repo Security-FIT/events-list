@@ -528,11 +528,15 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 .cell--name {
   position: relative;
   padding-left: 56px; /* reserve space for CORE/SJR badge */
+  padding-right: 34px; /* reserve space for favourite button */
+  overflow: hidden; /* prevent long URLs from bleeding into adjacent columns */
 }
 
 .cell--name a {
   text-decoration: none;
   border-bottom: 1px solid transparent;
+  display: block;
+  min-width: 0;
 }
 
 .cell--name a:hover {
@@ -548,6 +552,37 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   margin-top: 2px;
   color: var(--muted);
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favBtn {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 14px;
+  padding: 0;
+}
+
+.favBtn:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--text) 18%, var(--border));
+}
+
+.favBtn[aria-pressed="true"] {
+  color: var(--text);
+  border-color: color-mix(in srgb, #f2c14e 55%, var(--border));
 }
 
 .tagList {

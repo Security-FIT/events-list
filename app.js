@@ -46,6 +46,8 @@ const THEME_STORAGE_KEY = "conf_theme"; // "dark" | "light"
 const HIDE_PAST_STORAGE_KEY = "conf_hide_past"; // "1" | "0"
 const SEARCH_STORAGE_KEY = "conf_search"; // persisted query
 const VIEW_STORAGE_KEY = "conf_view"; // "conferences" | "journals"
+const FAV_STORAGE_KEY = "conf_favs_v1"; // JSON string array of favourite keys
+const PRIORITY_ONLY_STORAGE_KEY = "conf_priority_only"; // "1" | "0"
 
 function applyTheme(theme) {
   const t = theme === "light" ? "light" : "dark";
@@ -163,6 +165,73 @@ function saveView(v) {
   } catch {
     // ignore
   }
+}
+
+function loadPriorityOnlyDefault() {
+  try {
+    const v = localStorage.getItem(PRIORITY_ONLY_STORAGE_KEY);
+    if (v === "1") return true;
+    if (v === "0") return false;
+  } catch {
+    // ignore
+  }
+  return false;
+}
+
+function savePriorityOnly(value) {
+  try {
+    localStorage.setItem(PRIORITY_ONLY_STORAGE_KEY, value ? "1" : "0");
+  } catch {
+    // ignore
+  }
+}
+
+function loadFavs() {
+  try {
+    const raw = localStorage.getItem(FAV_STORAGE_KEY);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return new Set();
+    return new Set(arr.map(String));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveFavs(set) {
+  try {
+    localStorage.setItem(FAV_STORAGE_KEY, JSON.stringify([...set]));
+  } catch {
+    // ignore
+  }
+}
+
+function favKey(kind, id) {
+  return `${String(kind)}:${String(id)}`;
+}
+
+function isFav(kind, id) {
+  const s = window.__FAVS__;
+  if (!s) return false;
+  return s.has(favKey(kind, id));
+}
+
+function toggleFav(kind, id) {
+  if (!window.__FAVS__) window.__FAVS__ = new Set();
+  const key = favKey(kind, id);
+  if (window.__FAVS__.has(key)) window.__FAVS__.delete(key);
+  else window.__FAVS__.add(key);
+  saveFavs(window.__FAVS__);
+}
+
+function favFirst(items, kind) {
+  // Stable partition: keep the existing order within favourites and within non-favourites.
+  const favs = [];
+  const rest = [];
+  for (const it of items) {
+    (isFav(kind, it.id) ? favs : rest).push(it);
+  }
+  return favs.concat(rest);
 }
 
 function bindFilterToggle() {
@@ -428,9 +497,27 @@ function confRow(conf, { deadlineLines, countdownText = "", deadlineMuted = fals
       ]);
 
   const coreBadge = el("div", { class: `coreBadge coreBadge--${coreKey}`, text: coreText, title: `CORE: ${coreText}` });
+  const favOn = isFav("conf", conf.id);
+  const favBtn = el(
+    "button",
+    {
+      type: "button",
+      class: "favBtn",
+      "aria-label": "Favourite",
+      title: "Favourite",
+      "aria-pressed": favOn ? "true" : "false",
+      onClick: (e) => {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
+        toggleFav("conf", conf.id);
+        if (window.__RERENDER__) window.__RERENDER__();
+      }
+    },
+    [favOn ? "★" : "☆"]
+  );
 
   const cells = [
-    el("div", { class: "cell cell--name" }, [nameLink, coreBadge]),
+    el("div", { class: "cell cell--name" }, [nameLink, coreBadge, favBtn]),
     el("div", { class: "cell cell--deadline" }, [
       ...deadlineLines.map((line) => el("div", { class: `deadline ${deadlineMuted ? "muted" : ""}`, text: line }))
     ]),
@@ -653,11 +740,17 @@ function compileViewModel(all) {
   const matchAll = Boolean(document.getElementById("showOnlySelectedTags")?.checked);
   const hidePast = window.__HIDE_PAST__ ?? true;
   const q = String(window.__SEARCH_QUERY__ || "").trim();
+  const priorityOnly = Boolean(document.getElementById("priorityOnly")?.checked);
   const knownSort = String(document.getElementById("sortKnown")?.value ?? "deadlineAsc");
   const tbdSort = String(document.getElementById("sortTbd")?.value ?? "approxAsc");
 
   // Tag filtering
   let filtered = all.filter(c => tagMatches(c, selected, matchAll));
+
+  // Priority-only filtering (favourites)
+  if (priorityOnly) {
+    filtered = filtered.filter(c => isFav("conf", c.id));
+  }
 
   // Name search (filter + mild ranking boost)
   if (q) {
@@ -671,10 +764,13 @@ function compileViewModel(all) {
   const known = filtered.filter(c => c.kind === "known" && c.deadlineEpochMs);
   const tbd = filtered.filter(c => c.kind === "tbd" || !c.deadlineEpochMs);
 
+  const knownSorted = favFirst(sortKnown(known, knownSort), "conf");
+  const tbdSorted = favFirst(sortTbd(tbd, tbdSort), "conf");
+
   return {
     hidePast,
-    known: sortKnown(known, knownSort),
-    tbd: sortTbd(tbd, tbdSort),
+    known: knownSorted,
+    tbd: tbdSorted,
     knownSort,
     counts: { total: all.length, filtered: filtered.length, known: known.length, tbd: tbd.length }
   };
@@ -684,9 +780,13 @@ function compileJournalsViewModel(allJournals) {
   const selected = selectedTags();
   const matchAll = Boolean(document.getElementById("showOnlySelectedTags")?.checked);
   const q = String(window.__SEARCH_QUERY__ || "").trim();
+  const priorityOnly = Boolean(document.getElementById("priorityOnly")?.checked);
   const sortMode = String(document.getElementById("sortJournals")?.value ?? "sjrDesc");
 
   let filtered = allJournals.filter(j => tagMatches(j, selected, matchAll));
+  if (priorityOnly) {
+    filtered = filtered.filter(j => isFav("journal", j.id));
+  }
   if (q) {
     filtered = filtered
       .map((j) => ({ j, s: fuzzyScore(q, j.name) }))
@@ -695,7 +795,9 @@ function compileJournalsViewModel(allJournals) {
       .map((x) => x.j);
   }
 
-  return { journals: sortJournals(filtered, sortMode), counts: { total: allJournals.length, filtered: filtered.length } };
+  const sorted = sortJournals(filtered, sortMode);
+  const favBumped = favFirst(sorted, "journal");
+  return { journals: favBumped, counts: { total: allJournals.length, filtered: filtered.length } };
 }
 
 function confRowJournals(j) {
@@ -713,6 +815,24 @@ function confRowJournals(j) {
       ]);
 
   const badge = el("div", { class: `sjrBadge sjrBadge--${sjrKey}`, text: sjrText, title: `SJR: ${sjrText}` });
+  const favOn = isFav("journal", j.id);
+  const favBtn = el(
+    "button",
+    {
+      type: "button",
+      class: "favBtn",
+      "aria-label": "Favourite",
+      title: "Favourite",
+      "aria-pressed": favOn ? "true" : "false",
+      onClick: (e) => {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
+        toggleFav("journal", j.id);
+        if (window.__RERENDER__) window.__RERENDER__();
+      }
+    },
+    [favOn ? "★" : "☆"]
+  );
   const tagChips = el("div", { class: "tagList" }, (j.tags || []).map((t) => el("span", { class: "tagChip", text: tagDisplay(t), "data-tag": t })));
   const noteText = String(j.note || "").trim();
 
@@ -721,7 +841,7 @@ function confRowJournals(j) {
   if (gradient) attrs.style = `--tag-gradient: ${gradient};`;
 
   return el("div", attrs, [
-    el("div", { class: "cell cell--name" }, [nameLink, badge]),
+    el("div", { class: "cell cell--name" }, [nameLink, badge, favBtn]),
     el("div", { class: "cell cell--tags" }, [tagChips]),
     el("div", { class: "cell cell--note" }, [el("div", { class: "noteText", text: noteText || "—" })])
   ]);
@@ -762,6 +882,8 @@ async function main() {
   window.__HIDE_PAST__ = loadHidePastDefault();
   window.__SEARCH_QUERY__ = loadSearchDefault();
   window.__VIEW__ = loadViewDefault();
+  window.__FAVS__ = loadFavs();
+  window.__PRIORITY_ONLY__ = loadPriorityOnlyDefault();
 
   const knownList = document.getElementById("knownList");
   const tbdList = document.getElementById("tbdList");
@@ -795,6 +917,7 @@ async function main() {
     if (btnConfs) btnConfs.setAttribute("aria-selected", "true");
     if (btnJournals) btnJournals.setAttribute("aria-selected", "false");
   };
+  window.__RERENDER__ = rerender;
 
   const bind = (sel, ev, fn) => {
     const node = document.querySelector(sel);
@@ -806,6 +929,12 @@ async function main() {
     bind(`input[data-tag="${tag}"]`, "change", rerender);
   }
   bind("#showOnlySelectedTags", "change", rerender);
+  bind("#priorityOnly", "change", (e) => {
+    const checked = Boolean(e?.target?.checked);
+    window.__PRIORITY_ONLY__ = checked;
+    savePriorityOnly(checked);
+    rerender();
+  });
   bind("#sortKnown", "change", rerender);
   bind("#sortTbd", "change", rerender);
   bind("#sortJournals", "change", rerender);
@@ -823,6 +952,10 @@ async function main() {
       t = setTimeout(rerender, 120);
     });
   }
+
+  // Init priority-only checkbox state from storage.
+  const prioEl = document.getElementById("priorityOnly");
+  if (prioEl) prioEl.checked = Boolean(window.__PRIORITY_ONLY__);
 
   bindFilterToggle();
   bind("#darkMode", "change", (e) => {
