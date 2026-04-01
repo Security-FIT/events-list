@@ -1,63 +1,366 @@
 {
   "conferences": [
     {
-      "name": "ESORICS 2025 (Round 2)",
-      "url": "https://esorics2025.sciencesconf.org/",
+      "name": "ICPR 2026",
+      "url": "https://icpr2026.org/calls.html",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2025-04-29T23:59:59"
+        "aot": "2026-01-10T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [],
+      "note": "Main conference paper submission deadline."
+    },
+    {
+      "name": "ACM Workshop on Artificial Intelligence and Security (AISec) 2026",
+      "url": "https://aisec.cc",
+      "submission": {
+        "type": "tbd",
+        "date": ""
+      },
+      "core_ranking": "-",
+      "tags": [
+        "Security"
+      ],
+      "note": "2026 CFP was not posted on the official site as of 2026-03-31. The latest official site still points to the 2025 workshop cycle."
+    },
+    {
+      "name": "Conference on Secure and Trustworthy Machine Learning (SaTML) 2026",
+      "url": "https://satml.org",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-09-24T23:59:59"
+      },
+      "core_ranking": "-",
+      "tags": [
+        "Security"
+      ],
+      "note": "Main conference paper submission deadline."
+    },
+    {
+      "name": "USENIX Security Symposium 2027 (Cycle 1)",
+      "url": "https://www.usenix.org/conference/usenixsecurity27",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-08-25T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "Paper submission deadline for Cycle 1. Paper registration is due August 18, 2026."
+    },
+    {
+      "name": "USENIX Security Symposium 2027 (Cycle 2)",
+      "url": "https://www.usenix.org/conference/usenixsecurity27",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2027-01-26T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "Paper submission deadline for Cycle 2. Paper registration is due January 19, 2027."
+    },
+    {
+      "name": "IEEE Symposium on Security and Privacy (S&P) 2026 (Cycle 1)",
+      "url": "https://sp2026.ieee-security.org",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-06-05T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "First paper submission cycle."
+    },
+    {
+      "name": "IEEE Symposium on Security and Privacy (S&P) 2026 (Cycle 2)",
+      "url": "https://sp2026.ieee-security.org",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-11-13T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "Second paper submission cycle."
+    },
+    {
+      "name": "ACM CCS 2026 (Cycle 1)",
+      "url": "https://www.sigsac.org/ccs/CCS2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-14T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "Full paper deadline for Cycle 1. Abstract registration is due January 7, 2026 AoE."
+    },
+    {
+      "name": "ACM CCS 2026 (Cycle 2)",
+      "url": "https://www.sigsac.org/ccs/CCS2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-29T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Security"
+      ],
+      "note": "Full paper deadline for Cycle 2. Abstract registration is due April 22, 2026 AoE."
+    },
+    {
+      "name": "ESORICS 2026 (Winter Cycle)",
+      "url": "https://sites.google.com/di.uniroma1.it/esorics2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-09T23:59:59"
       },
       "core_ranking": "A",
       "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "Earlier ESORICS 2026 deadline referenced by organizers before the spring CFP."
     },
     {
-      "name": "ICAART (Regular Papers)",
-      "url": "https://icaart.scitevents.org/",
+      "name": "ESORICS 2026 (Spring Cycle)",
+      "url": "https://sites.google.com/di.uniroma1.it/esorics2026/",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2026-09-30T23:59:59"
+        "aot": "2026-04-21T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "Security"
+      ],
+      "note": "Official spring paper submission deadline."
+    },
+    {
+      "name": "IFIP SEC 2026",
+      "url": "https://ifipsec.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-12-19T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "Security"
+      ],
+      "note": "Main conference submission deadline. The official CFP marks deadlines as AoE."
+    },
+    {
+      "name": "ARES 2026",
+      "url": "https://www.ares-conference.eu/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-03-09T23:59:59"
+      },
+      "core_ranking": "B",
+      "tags": [
+        "Security"
+      ],
+      "note": "Main conference submission deadline. Abstract registration is due March 2, 2026 AoE."
+    },
+    {
+      "name": "Safe, Secure and Robust AI Track at SAC 2026 (S2RAI)",
+      "url": "https://sites.google.com/view/s2rai-sac/",
+      "submission": {
+        "type": "datetime",
+        "iso": "2025-10-17T23:59:59-04:00"
       },
       "core_ranking": "B",
       "tags": [
         "LLMs",
-        "Usability",
-        "Speech",
         "Security"
       ],
-      "note": ""
+      "note": "Submission of regular papers and SRC research abstracts. Deadline is listed in EDT."
     },
     {
-      "name": "ICAART (Position Papers)",
-      "url": "https://icaart.scitevents.org/",
+      "name": "ICLR 2026",
+      "url": "https://iclr.cc/Conferences/2026",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2026-11-13T23:59:59"
+        "aot": "2025-09-24T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "Full paper submission deadline. Abstract deadline is September 19, 2025 AoE."
+    },
+    {
+      "name": "NeurIPS 2026",
+      "url": "https://neurips.cc/Conferences/2026",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-05-06T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "Full paper submission deadline. Abstract deadline is May 4, 2026 AoE."
+    },
+    {
+      "name": "ICML 2026",
+      "url": "https://icml.cc/Conferences/2026",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-28T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "Full paper submission deadline. Abstract deadline is January 23, 2026 AoE."
+    },
+    {
+      "name": "ACL 2026",
+      "url": "https://2026.aclweb.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-01-05T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "Main conference papers are submitted via ARR. Commitment deadline is March 14, 2026."
+    },
+    {
+      "name": "EACL 2026",
+      "url": "https://2026.eacl.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-10-06T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "Main conference papers are submitted via ARR. EACL commitment deadline is December 14, 2025 AoE."
+    },
+    {
+      "name": "ICTAI 2026",
+      "url": "https://ictai.computer.org/2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-06-30T23:59:59"
       },
       "core_ranking": "B",
       "tags": [
-        "LLMs",
-        "Usability",
-        "Speech",
-        "Security"
+        "LLMs"
       ],
-      "note": ""
+      "note": "Paper submission date listed on the official site. The site does not expose an explicit timezone, so this is encoded as AoE end-of-day."
     },
     {
-      "name": "IJCB 2026",
-      "url": "https://ijcb2026.ieee-biometrics.org/call-for-papers",
+      "name": "WCCI 2026",
+      "url": "https://attend.ieee.org/wcci-2026/",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2026-04-10T23:59:59"
+        "aot": "2026-01-31T23:59:59"
       },
-      "core_ranking": "B",
+      "core_ranking": "A",
       "tags": [
-        "Biometrics",
+        "LLMs"
+      ],
+      "note": "Paper submission deadline from official WCCI-linked pages. The portal shows a legacy ERA2010 rank of A."
+    },
+    {
+      "name": "ML Prague 2026",
+      "url": "https://www.mlprague.com/",
+      "submission": {
+        "type": "tbd",
+        "date": ""
+      },
+      "core_ranking": "-",
+      "tags": [
+        "LLMs"
+      ],
+      "note": "No CFP or speaker submission deadline was posted on the official site as of 2026-03-31."
+    },
+    {
+      "name": "SOUPS 2025",
+      "url": "https://www.usenix.org/conference/soups2025",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-02-13T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "Security",
+        "Usability"
+      ],
+      "note": "Main conference paper submission deadline."
+    },
+    {
+      "name": "ACM CHI 2026",
+      "url": "https://chi2026.acm.org/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-09-11T23:59:59"
+      },
+      "core_ranking": "A*",
+      "tags": [
+        "Usability"
+      ],
+      "note": "Main paper deadline. Registration form / abstract is due September 4, 2025."
+    },
+    {
+      "name": "ICCAD 2026",
+      "url": "https://iccad.com/2026",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-14T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [],
+      "note": "Regular paper submission deadline. Abstract deadline is April 7, 2026."
+    },
+    {
+      "name": "QCE 2026",
+      "url": "https://qce.quantum.ieee.org/2026/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-04-13T23:59:59"
+      },
+      "core_ranking": "-",
+      "tags": [
+        "Quantum"
+      ],
+      "note": "Full technical paper deadline. Technical paper abstract is due April 6, 2026. The CORE portal lists this venue as National/Regional rather than A*/A/B/C."
+    },
+    {
+      "name": "AsiaCCS 2027 (Cycle 1)",
+      "url": "https://asiaccs2027.cityu.edu.mo/home/index.html",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-08-21T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "First paper submission cycle."
+    },
+    {
+      "name": "AsiaCCS 2027 (Cycle 2)",
+      "url": "https://asiaccs2027.cityu.edu.mo/home/index.html",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-12-11T23:59:59"
+      },
+      "core_ranking": "A",
+      "tags": [
+        "Security"
+      ],
+      "note": "Second paper submission cycle."
     },
     {
       "name": "BIOSIG 2026",
@@ -71,189 +374,145 @@
         "Biometrics",
         "Security"
       ],
-      "note": ""
+      "note": "Main paper deadline from the BIOSIG 2026 CFP."
     },
     {
-      "name": "USENIX Security '26 (Cycle 1)",
-      "url": "https://www.usenix.org/conference/usenixsecurity26/call-for-papers",
+      "name": "IEEE FG 2026",
+      "url": "https://ieee-biometrics.org/conferences/flagship/fg/",
       "submission": {
-        "type": "datetime_aot",
-        "aot": "2025-08-26T23:59:00"
+        "type": "tbd",
+        "date": ""
       },
-      "note": "Cycle 1 (check CFP for mandatory registration one week earlier).",
-      "core_ranking": "A*",
-      "tags": [
-        "Security"
-      ]
-    },
-    {
-      "name": "USENIX Security '26 (Cycle 2)",
-      "url": "https://www.usenix.org/conference/usenixsecurity26/call-for-papers",
-      "submission": {
-        "type": "datetime_aot",
-        "aot": "2026-02-05T23:59:00"
-      },
-      "core_ranking": "A*",
-      "tags": [
-        "Security"
-      ],
-      "note": ""
-    },
-    {
-      "name": "IEEE FG 2026 (Round 1)",
-      "url": "https://fg2026.ieee-biometrics.org/cfp/",
-      "submission": {
-        "type": "datetime_aot",
-        "aot": "2025-10-06T23:59:59"
-      },
-      "core_ranking": "",
+      "core_ranking": "B",
       "tags": [
         "Biometrics"
       ],
-      "note": ""
+      "note": "FG 2026 is announced, but the official year-specific site did not expose machine-readable important dates to the crawler, so this entry is left as TBD."
     },
     {
-      "name": "IEEE FG 2026 (Round 2)",
-      "url": "https://fg2026.ieee-biometrics.org/cfp/",
+      "name": "WACV 2025 (Round 1)",
+      "url": "https://wacv2025.thecvf.com/",
       "submission": {
-        "type": "datetime_aot",
-        "aot": "2026-01-25T23:59:59"
+        "type": "datetime",
+        "iso": "2024-07-15T23:59:59-07:00"
       },
-      "core_ranking": "",
-      "tags": [
-        "Biometrics"
-      ],
-      "note": ""
+      "core_ranking": "A",
+      "tags": [],
+      "note": "Round 1 paper submission deadline in Pacific Time."
     },
     {
-      "name": "WACV 2026",
-      "url": "https://wacv.thecvf.com/Conferences/2026/Dates",
+      "name": "WACV 2025 (Round 2)",
+      "url": "https://wacv2025.thecvf.com/",
       "submission": {
-        "type": "datetime_aot",
-        "aot": "2025-07-11T23:59:59"
+        "type": "datetime",
+        "iso": "2024-09-09T23:59:59-07:00"
       },
-      "core_ranking": "",
-      "tags": [
-        "LLMs"
-      ],
-      "note": ""
+      "core_ranking": "A",
+      "tags": [],
+      "note": "Round 2 paper submission deadline in Pacific Time."
     },
     {
-      "name": "INTERSPEECH 2026",
-      "url": "https://interspeech2026.org/en-AU/pages/calls/call-for-papers",
+      "name": "Interspeech 2025",
+      "url": "https://www.interspeech2025.org/",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2026-02-25T23:59:59"
+        "aot": "2025-02-12T23:59:59"
       },
       "core_ranking": "A",
       "tags": [
         "Speech"
       ],
-      "note": ""
+      "note": "Paper submission deadline. Paper updates were allowed until February 19, 2025 AoE."
     },
     {
       "name": "IEEE ICME 2025",
-      "url": "https://2025.ieeeicme.org/important-dates/",
+      "url": "https://2025.ieeeicme.org/",
       "submission": {
         "type": "datetime_aot",
         "aot": "2024-12-23T23:59:59"
       },
-      "core_ranking": "",
-      "tags": [
-        "LLMs"
-      ],
-      "note": ""
+      "core_ranking": "A",
+      "tags": [],
+      "note": "Extended conference paper submission deadline."
     },
     {
-      "name": "PETS (PoPETs 2026 Issue 1)",
+      "name": "PETS 2026 (Issue 1)",
       "url": "https://petsymposium.org/",
       "submission": {
         "type": "datetime_aot",
         "aot": "2025-05-31T23:59:59"
       },
-      "core_ranking": "",
+      "core_ranking": "A",
       "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "Firm PoPETs/PETS 2026 Issue 1 paper deadline."
     },
     {
-      "name": "PETS (PoPETs 2026 Issue 2)",
+      "name": "PETS 2026 (Issue 2)",
       "url": "https://petsymposium.org/",
       "submission": {
         "type": "datetime_aot",
         "aot": "2025-08-31T23:59:59"
       },
-      "core_ranking": "",
+      "core_ranking": "A",
       "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "Firm PoPETs/PETS 2026 Issue 2 paper deadline."
     },
     {
-      "name": "PETS (PoPETs 2026 Issue 3)",
+      "name": "PETS 2026 (Issue 3)",
       "url": "https://petsymposium.org/",
       "submission": {
         "type": "datetime_aot",
         "aot": "2025-11-30T23:59:59"
       },
-      "core_ranking": "",
+      "core_ranking": "A",
       "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "Firm PoPETs/PETS 2026 Issue 3 paper deadline."
     },
     {
-      "name": "PETS (PoPETs 2026 Issue 4)",
+      "name": "PETS 2026 (Issue 4)",
       "url": "https://petsymposium.org/",
       "submission": {
         "type": "datetime_aot",
         "aot": "2026-02-28T23:59:59"
       },
-      "core_ranking": "",
+      "core_ranking": "A",
       "tags": [
         "Security"
       ],
-      "note": ""
+      "note": "Firm PoPETs/PETS 2026 Issue 4 paper deadline."
     },
     {
-      "name": "SAFECOMP 2026",
-      "url": "https://safecomp2026.webs.upv.es/call-for-papers/",
+      "name": "IJCB 2025",
+      "url": "https://ijcb2025.ieee-biometrics.org/",
       "submission": {
         "type": "datetime_aot",
-        "aot": "2026-03-15T23:59:59"
+        "aot": "2025-05-05T23:59:59"
       },
-      "core_ranking": "",
+      "core_ranking": "B",
+      "tags": [
+        "Biometrics",
+        "Security"
+      ],
+      "note": "Extended main paper deadline. Accessible secondary sources reported an extension from April 11, 2025 to May 5, 2025."
+    },
+    {
+      "name": "SAFECOMP 2025",
+      "url": "https://safecomp2025.se/",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2025-02-24T23:59:59"
+      },
+      "core_ranking": "B",
       "tags": [
         "Security"
       ],
-      "note": ""
-    },
-    {
-      "name": "blockTEA 2026",
-      "url": "https://blocktea.eai-conferences.org/2026/",
-      "submission": {
-        "type": "datetime_aot",
-        "aot": "2026-04-20T23:59:59"
-      },
-      "core_ranking": "",
-      "tags": [
-        "Blockchain"
-      ],
-      "note": ""
-    },
-    {
-      "name": "AFT 2026",
-      "url": "https://aft.ifca.ai/aft26/CFP.html",
-      "submission": {
-        "type": "datetime_aot",
-        "aot": "2026-05-20T23:59:59"
-      },
-      "core_ranking": "",
-      "tags": [
-        "Blockchain"
-      ],
-      "note": ""
+      "note": "Main conference full paper deadline. Abstract and workshop proposal deadline is February 14, 2025."
     }
   ]
 }
