@@ -681,7 +681,7 @@ function confRow(conf, { deadlineLines, countdownText = "", deadlineMuted = fals
   );
 
   const cells = [
-    el("div", { class: "cell cell--name" }, [nameLink, coreBadge, favBtn]),
+    el("div", { class: "cell cell--name" }, [el("div", { class: "nameBlock" }, [nameLink]), coreBadge, favBtn]),
     el("div", { class: "cell cell--deadline" }, [
       ...deadlineLines.map((line) => el("div", { class: `deadline ${deadlineMuted ? "muted" : ""}`, text: line }))
     ]),
@@ -1005,7 +1005,7 @@ function confRowJournals(j) {
   if (gradient) attrs.style = `--tag-gradient: ${gradient};`;
 
   return el("div", attrs, [
-    el("div", { class: "cell cell--name" }, [nameLink, badge, favBtn]),
+    el("div", { class: "cell cell--name" }, [el("div", { class: "nameBlock" }, [nameLink]), badge, favBtn]),
     el("div", { class: "cell cell--tags" }, [tagChips]),
     el("div", { class: "cell cell--note" }, [el("div", { class: "noteText", text: noteText || "—" })])
   ]);

@@ -52,6 +52,35 @@ body {
   background: var(--bg);
 }
 
+/* Large desktops: viewport-height app shell (no page scroll; panes scroll internally).
+   Tablets/small-height screens keep page scrolling so lists don't get squashed. */
+@media (min-width: 1100px) and (min-height: 780px) {
+  body {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main .columns {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .main .column {
+    height: 100%;
+  }
+}
+
 a { color: inherit; }
 
 .mono { font-family: var(--mono); }
@@ -59,6 +88,7 @@ a { color: inherit; }
 .container {
   max-width: 1600px;
   margin: 0 auto;
+  width: 100%;
   padding-left: 18px;
   padding-right: 18px;
 }
@@ -302,6 +332,7 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 .searchSection__inner {
   display: grid;
   gap: 6px;
+  width: 100%;
 }
 
 .filtersPanel {
@@ -558,9 +589,18 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 2px 12px var(--shadow);
-  height: calc(100vh - 210px);
+  height: auto; /* desktop/tablet height is controlled by the app-shell layout; mobile overrides below */
   min-height: 0;
   overflow: hidden;
+}
+
+/* Tablets / small-height non-mobile: keep page scroll, but don't let each table take full viewport height.
+   Target: roughly ~6 rows visible, with internal scrolling inside the pane. */
+@media (min-width: 721px) and (max-width: 1099px) {
+  .column {
+    /* header (~90) + 6 rows (~70 each) ≈ 510; clamp to sensible viewport fraction */
+    height: clamp(520px, 72vh, 760px);
+  }
 }
 
 .column__header {
@@ -656,19 +696,23 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 
 .row[data-view="known"] {
   grid-template-columns:
-    minmax(0, 1.3fr)
+    minmax(220px, 1.35fr)
     minmax(0, 1fr)
     minmax(0, 0.9fr)
-    minmax(0, 0.7fr)  /* Countdown */
-    minmax(0, 1fr);   /* Note (last) */
+    minmax(0, 0.7fr); /* Countdown */
+  grid-template-areas:
+    "name deadline tags countdown"
+    "note note note note";
 }
 
 .row[data-view="tbd"] {
   grid-template-columns:
-    minmax(0, 1.3fr)
+    minmax(220px, 1.35fr)
     minmax(0, 1fr)
-    minmax(0, 0.9fr)
-    minmax(0, 1fr);   /* Note (last) */
+    minmax(0, 0.9fr);
+  grid-template-areas:
+    "name deadline tags"
+    "note note note";
 }
 
 .row--header {
@@ -681,30 +725,52 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 
 .table--header .row--header[data-view="known"] {
   grid-template-columns:
-    minmax(0, 1.3fr)
+    minmax(220px, 1.35fr)
     minmax(0, 1fr)
     minmax(0, 0.9fr)
-    minmax(0, 0.7fr)
-    minmax(0, 1fr);
+    minmax(0, 0.7fr);
 }
 
 .table--header .row--header[data-view="tbd"] {
   grid-template-columns:
-    minmax(0, 1.3fr)
+    minmax(220px, 1.35fr)
     minmax(0, 1fr)
-    minmax(0, 0.9fr)
-    minmax(0, 1fr);
+    minmax(0, 0.9fr);
 }
+
+/* Desktop/tablet grid areas for conferences only (mobile overrides below). */
+.row[data-view="known"] .cell--name,
+.row[data-view="tbd"] .cell--name { grid-area: name; }
+
+.row[data-view="known"] .cell--deadline,
+.row[data-view="tbd"] .cell--deadline { grid-area: deadline; }
+
+.row[data-view="known"] .cell--tags,
+.row[data-view="tbd"] .cell--tags { grid-area: tags; }
+
+.row[data-view="known"] .cell--note,
+.row[data-view="tbd"] .cell--note { grid-area: note; }
+
+.row[data-view="known"] .cell--countdown { grid-area: countdown; }
 
 .cell {
   min-width: 0;
+  overflow: hidden; /* prevent content from bleeding into adjacent columns */
+}
+
+.cell--note {
+  overflow: visible; /* note has its own wrapping/clamping logic */
 }
 
 .cell--name {
   position: relative;
   padding-left: 56px; /* reserve space for CORE/SJR badge */
-  padding-right: 34px; /* reserve space for favourite button */
+  padding-right: 8px;
   overflow: hidden; /* prevent long URLs from bleeding into adjacent columns */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px; /* room for fav button + border */
+  column-gap: 10px;
+  align-items: start;
 }
 
 .cell--name a {
@@ -712,6 +778,12 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   border-bottom: 1px solid transparent;
   display: block;
   min-width: 0;
+}
+
+/* The name/link block should always occupy the left grid column (even when no URL => it's a div). */
+.cell--name .nameBlock {
+  grid-column: 1;
+  min-width: 0px;
 }
 
 .cell--name a:hover {
@@ -733,9 +805,7 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
 }
 
 .favBtn {
-  position: absolute;
-  right: 8px;
-  top: 8px;
+  position: static;
   width: 22px;
   height: 22px;
   display: grid;
@@ -748,6 +818,9 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   line-height: 1;
   font-size: 14px;
   padding: 0;
+  grid-column: 2;
+  justify-self: end;
+  align-self: start;
 }
 
 .favBtn:hover {
@@ -886,6 +959,10 @@ html[data-theme="light"] {
 
   .column {
     min-height: auto;
+    /* Keep pane scrolling on mobile (so you can reach TBD quickly),
+       but make panes taller so ~3 items are visible at once. */
+    height: calc(100vh - 170px);
+    overflow: hidden;
   }
 
   .table--header {
@@ -937,6 +1014,7 @@ html[data-theme="light"] {
 
   .column__body {
     padding: 10px;
+    overflow: auto;
   }
 }
 
