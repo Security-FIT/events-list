@@ -247,6 +247,170 @@ function bindFilterToggle() {
   btn.addEventListener("click", () => setOpen(panel.hidden));
 }
 
+function bindBuilderModal() {
+  const openBtn = document.getElementById("builderOpen");
+  const modal = document.getElementById("builderModal");
+  const closeBtn = document.getElementById("builderClose");
+  const backdrop = document.getElementById("builderBackdrop");
+  if (!openBtn || !modal) return;
+
+  const open = () => {
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    const first = document.getElementById("builderName") || document.getElementById("builderKind");
+    if (first) first.focus();
+  };
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = "";
+    openBtn.focus();
+  };
+
+  openBtn.addEventListener("click", open);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  if (backdrop) backdrop.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (modal.hidden) return;
+    if (e.key === "Escape") close();
+  });
+}
+
+function renderBuilderTags() {
+  const root = document.getElementById("builderTags");
+  if (!root) return;
+  root.textContent = "";
+  for (const tag of TAGS) {
+    const id = `builder-tag-${tag}`;
+    const input = el("input", { type: "checkbox", id, "data-tag": tag });
+    const label = el("label", { class: "tagPill", for: id }, [input, el("span", { text: tagDisplay(tag) })]);
+    root.appendChild(label);
+  }
+}
+
+function builderSelectedTags() {
+  const root = document.getElementById("builderTags");
+  if (!root) return [];
+  return [...root.querySelectorAll('input[type="checkbox"][data-tag]')]
+    .filter((x) => x.checked)
+    .map((x) => String(x.getAttribute("data-tag")));
+}
+
+function setBuilderVisibility() {
+  const kind = String(document.getElementById("builderKind")?.value || "conference");
+  const subType = String(document.getElementById("builderSubmissionType")?.value || "datetime");
+
+  const coreWrap = document.getElementById("builderCoreWrap");
+  const sjrWrap = document.getElementById("builderSjrWrap");
+  const subWrap = document.getElementById("builderSubmissionWrap");
+  const isoWrap = document.getElementById("builderIsoWrap");
+  const pickerWrap = document.getElementById("builderPickerWrap");
+  const aoeWrap = document.getElementById("builderAoeWrap");
+  const tbdWrap = document.getElementById("builderTbdWrap");
+
+  const isConf = kind === "conference";
+  if (coreWrap) coreWrap.hidden = !isConf;
+  if (sjrWrap) sjrWrap.hidden = isConf;
+  if (subWrap) subWrap.hidden = !isConf;
+  if (isoWrap) isoWrap.hidden = !isConf || subType !== "datetime";
+  if (pickerWrap) pickerWrap.hidden = !isConf || (subType !== "datetime" && subType !== "datetime_aot");
+  if (aoeWrap) aoeWrap.hidden = !isConf || subType !== "datetime_aot";
+  if (tbdWrap) tbdWrap.hidden = !isConf || subType !== "tbd";
+}
+
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
+function applyPickerToFields() {
+  const dateEl = document.getElementById("builderPickerDate");
+  const timeEl = document.getElementById("builderPickerTime");
+  const tzEl = document.getElementById("builderPickerTz");
+  const isoEl = document.getElementById("builderIso");
+  const aoeEl = document.getElementById("builderAoe");
+  if (!dateEl || !timeEl || !tzEl) return;
+  const ymd = String(dateEl.value || "").trim(); // YYYY-MM-DD
+  const time = String(timeEl.value || "").trim(); // HH:MM or HH:MM:SS
+  if (!ymd || !time) return;
+  const hms = time.length === 5 ? `${time}:00` : time;
+  const tz = String(tzEl.value || "-12:00");
+
+  // Fill ISO field for "datetime"
+  if (isoEl) {
+    const iso = tz === "Z"
+      ? `${ymd}T${hms}Z`
+      : `${ymd}T${hms}${tz}`;
+    isoEl.value = iso;
+  }
+
+  // Fill AoE wall-clock field for "datetime_aot" (timezone-less)
+  if (aoeEl) {
+    aoeEl.value = `${ymd}T${hms}`;
+  }
+}
+
+function builderGenerateItem() {
+  const kind = String(document.getElementById("builderKind")?.value || "conference");
+  const name = String(document.getElementById("builderName")?.value || "").trim();
+  const url = String(document.getElementById("builderUrl")?.value || "").trim();
+  const note = String(document.getElementById("builderNote")?.value || "");
+  const tags = builderSelectedTags();
+
+  const out = document.getElementById("builderOut");
+  const hint = document.getElementById("builderHint");
+
+  if (!name) {
+    if (out) out.value = "";
+    if (hint) hint.textContent = "Name is required.";
+    return null;
+  }
+
+  let item = { name, url, tags, note };
+
+  if (kind === "journal") {
+    const sjr = String(document.getElementById("builderSjr")?.value || "").trim();
+    if (sjr) item.sjr = sjr;
+    if (hint) hint.innerHTML = `Paste into <span class="mono">journals.json</span>.`;
+  } else {
+    const core = String(document.getElementById("builderCore")?.value || "").trim();
+    if (core) item.core_ranking = core;
+
+    const subType = String(document.getElementById("builderSubmissionType")?.value || "datetime");
+    if (subType === "datetime") {
+      const iso = String(document.getElementById("builderIso")?.value || "").trim();
+      item.submission = { type: "datetime", iso };
+    } else if (subType === "datetime_aot") {
+      const aot = String(document.getElementById("builderAoe")?.value || "").trim();
+      item.submission = { type: "datetime_aot", aot };
+    } else {
+      const date = String(document.getElementById("builderDate")?.value || "").trim();
+      item.submission = { type: "tbd", date };
+    }
+    if (hint) hint.innerHTML = `Paste into <span class="mono">conferences.json</span>.`;
+  }
+
+  // Drop empty fields for cleanliness.
+  if (!item.url) delete item.url;
+  if (!item.note) item.note = "";
+  if (!Array.isArray(item.tags) || item.tags.length === 0) item.tags = [];
+
+  if (out) out.value = JSON.stringify(item, null, 2);
+  return item;
+}
+
+async function builderCopyOut() {
+  const out = document.getElementById("builderOut");
+  if (!out) return;
+  const text = String(out.value || "");
+  if (!text.trim()) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    out.focus();
+    out.select();
+    try { document.execCommand("copy"); } catch { /* ignore */ }
+  }
+}
+
 function loadSavedTheme() {
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
@@ -875,6 +1039,7 @@ function tickCountdowns(containerEl, confById) {
 
 async function main() {
   renderTagFilter();
+  renderBuilderTags();
 
   const savedTheme = loadSavedTheme();
   applyTheme(savedTheme ?? systemTheme());
@@ -958,6 +1123,34 @@ async function main() {
   if (prioEl) prioEl.checked = Boolean(window.__PRIORITY_ONLY__);
 
   bindFilterToggle();
+  bindBuilderModal();
+
+  // Builder interactions
+  const builderKind = document.getElementById("builderKind");
+  const builderSub = document.getElementById("builderSubmissionType");
+  if (builderKind) builderKind.addEventListener("change", () => { setBuilderVisibility(); builderGenerateItem(); });
+  if (builderSub) builderSub.addEventListener("change", () => { setBuilderVisibility(); builderGenerateItem(); });
+  for (const id of ["builderName", "builderUrl", "builderCore", "builderSjr", "builderNote", "builderIso", "builderAoe", "builderDate"]) {
+    const n = document.getElementById(id);
+    if (n) n.addEventListener("input", () => builderGenerateItem());
+  }
+  const pickerDate = document.getElementById("builderPickerDate");
+  const pickerTime = document.getElementById("builderPickerTime");
+  const pickerTz = document.getElementById("builderPickerTz");
+  const usePicker = document.getElementById("builderUsePicker");
+  if (usePicker) usePicker.addEventListener("click", () => { applyPickerToFields(); builderGenerateItem(); });
+  if (pickerDate) pickerDate.addEventListener("input", () => { /* don't auto-overwrite; user clicks Use */ });
+  if (pickerTime) pickerTime.addEventListener("input", () => { /* don't auto-overwrite; user clicks Use */ });
+  if (pickerTz) pickerTz.addEventListener("change", () => { /* don't auto-overwrite; user clicks Use */ });
+  const tagsRoot = document.getElementById("builderTags");
+  if (tagsRoot) tagsRoot.addEventListener("change", () => builderGenerateItem());
+  const genBtn = document.getElementById("builderGenerate");
+  if (genBtn) genBtn.addEventListener("click", () => builderGenerateItem());
+  const copyBtn = document.getElementById("builderCopy");
+  if (copyBtn) copyBtn.addEventListener("click", () => builderCopyOut());
+  setBuilderVisibility();
+  builderGenerateItem();
+
   bind("#darkMode", "change", (e) => {
     const checked = Boolean(e?.target?.checked);
     const t = checked ? "dark" : "light";

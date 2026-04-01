@@ -81,10 +81,15 @@ a { color: inherit; }
   position: relative;
 }
 
+.headerTopActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
 .themeEmojiBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   width: 34px;
   height: 34px;
   border-radius: 10px;
@@ -125,8 +130,33 @@ a { color: inherit; }
 
 @media (min-width: 960px) {
   .header__inner {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
     align-items: start;
+  }
+}
+
+.header__left {
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .headerTopActions {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    margin-bottom: 0;
+  }
+
+  .header__left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .header__right {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 
@@ -191,6 +221,7 @@ a { color: inherit; }
   cursor: pointer;
   user-select: none;
   font-size: 13px;
+  max-width: 100%;
 }
 
 .tagPill input {
@@ -235,6 +266,8 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   border: 1px solid var(--border);
   background: var(--bg);
   padding: 0 10px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .input {
@@ -244,6 +277,8 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   background: var(--bg);
   padding: 0 10px;
   color: var(--text);
+  width: 100%;
+  max-width: 100%;
 }
 
 .input::placeholder {
@@ -277,6 +312,89 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   background: var(--panel);
   display: grid;
   gap: 10px;
+}
+
+.builderPanel {
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: grid;
+  gap: 10px;
+}
+
+.builderPanel__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .builderPanel__grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .builderPanel__tags,
+  .builderPanel__note {
+    grid-column: 1 / -1;
+  }
+}
+
+.builderPanel__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.builderHint {
+  font-size: 12px;
+}
+
+.builderPickerRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Small tablets: give TZ selector room by wrapping controls */
+@media (max-width: 860px) {
+  .builderPickerRow {
+    grid-template-columns: 1fr 1fr;
+  }
+  #builderPickerTz {
+    grid-column: 1 / -1;
+  }
+  #builderUsePicker {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: fit-content;
+  }
+}
+
+@media (max-width: 560px) {
+  .builderPickerRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  padding: 10px 12px;
+  outline: none;
+  resize: vertical;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.textarea:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--text) 35%, transparent);
+  outline-offset: 2px;
 }
 
 .btn--ghost {
@@ -318,6 +436,63 @@ html[data-theme="dark"] .btn:hover { border-color: #3a3a3a; }
   background: var(--bg);
   border-color: var(--border);
   color: var(--text);
+}
+
+.headerAddBtn {
+  height: 34px;
+}
+
+.modal[hidden] {
+  display: none !important;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #000 60%, transparent);
+}
+
+.modal__dialog {
+  position: relative;
+  width: min(920px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  overflow-x: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 10px 50px var(--shadow);
+  padding: 12px;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 4px 10px 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+.modal__title {
+  font-weight: 700;
+}
+
+.modal__close {
+  height: 32px;
+  width: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
 }
 
 .journalsView {

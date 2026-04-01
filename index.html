@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,14 +11,20 @@
     <header class="header">
       <div class="container">
         <div class="headerBox header__inner">
-        <!-- Emoji-only theme toggle (top-right) -->
-        <label class="themeEmojiBtn" aria-label="Toggle dark mode">
-          <input id="darkMode" class="themeEmojiBtn__input" type="checkbox" />
-          <span class="themeEmojiBtn__icon" aria-hidden="true">
-            <span class="themeEmojiBtn__emoji themeEmojiBtn__emoji--light">☀️</span>
-            <span class="themeEmojiBtn__emoji themeEmojiBtn__emoji--dark">🌙</span>
-          </span>
-        </label>
+        <div class="headerTopActions" aria-label="Header actions">
+          <!-- JSON entry generator -->
+          <button id="builderOpen" class="btn btn--ghost headerAddBtn" type="button">
+            ➕ Add entry
+          </button>
+          <!-- Emoji-only theme toggle -->
+          <label class="themeEmojiBtn" aria-label="Toggle dark mode">
+            <input id="darkMode" class="themeEmojiBtn__input" type="checkbox" />
+            <span class="themeEmojiBtn__icon" aria-hidden="true">
+              <span class="themeEmojiBtn__emoji themeEmojiBtn__emoji--light">☀️</span>
+              <span class="themeEmojiBtn__emoji themeEmojiBtn__emoji--dark">🌙</span>
+            </span>
+          </label>
+        </div>
         <div class="header__left">
           <h1 class="title">Conference Deadlines</h1>
           <p class="subtitle">
@@ -179,5 +185,127 @@
     </footer>
 
     <script defer src="./app.js"></script>
+
+    <!-- Builder modal -->
+    <div id="builderModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="builderTitle" hidden>
+      <div id="builderBackdrop" class="modal__backdrop" aria-hidden="true"></div>
+      <div class="modal__dialog" role="document">
+        <div class="modal__header">
+          <div class="modal__title" id="builderTitle">Add entry (JSON generator)</div>
+          <button id="builderClose" class="btn btn--ghost modal__close" type="button" aria-label="Close">✕</button>
+        </div>
+
+        <div class="builderPanel">
+          <div class="builderPanel__grid">
+            <div class="control">
+              <label class="control__label" for="builderKind">Kind</label>
+              <select id="builderKind" class="select">
+                <option value="conference" selected>Conference</option>
+                <option value="journal">Journal</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label class="control__label" for="builderName">Name</label>
+              <input id="builderName" class="input" type="text" placeholder="e.g., USENIX Security 2026" />
+            </div>
+
+            <div class="control">
+              <label class="control__label" for="builderUrl">URL</label>
+              <input id="builderUrl" class="input" type="url" placeholder="https://…" />
+            </div>
+
+            <div class="control" id="builderCoreWrap">
+              <label class="control__label" for="builderCore">CORE</label>
+              <select id="builderCore" class="select">
+                <option value="">(blank)</option>
+                <option value="A*">A*</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="unranked">unranked</option>
+              </select>
+            </div>
+
+            <div class="control" id="builderSjrWrap" hidden>
+              <label class="control__label" for="builderSjr">SJR</label>
+              <select id="builderSjr" class="select">
+                <option value="">(blank)</option>
+                <option value="D1">D1</option>
+                <option value="Q1">Q1</option>
+                <option value="Q2">Q2</option>
+                <option value="Q3">Q3</option>
+                <option value="Q4">Q4</option>
+                <option value="unranked">unranked</option>
+              </select>
+            </div>
+
+            <div class="control builderPanel__tags">
+              <label class="control__label">Tags</label>
+              <div id="builderTags" class="tagFilter" aria-label="Entry tags"></div>
+            </div>
+
+            <div class="control builderPanel__note">
+              <label class="control__label" for="builderNote">Note</label>
+              <textarea id="builderNote" class="textarea" rows="3" placeholder="Optional…"></textarea>
+            </div>
+
+            <div class="control" id="builderSubmissionWrap">
+              <label class="control__label" for="builderSubmissionType">Submission type</label>
+              <select id="builderSubmissionType" class="select">
+                <option value="datetime" selected>Known datetime (ISO with TZ)</option>
+                <option value="datetime_aot">Known AoE wall-clock (YYYY-MM-DDTHH:MM:SS)</option>
+                <option value="tbd">TBD (approx date)</option>
+              </select>
+            </div>
+
+            <div class="control" id="builderIsoWrap">
+              <label class="control__label" for="builderIso">ISO datetime</label>
+              <input id="builderIso" class="input mono" type="text" placeholder="2026-02-05T23:59:00-12:00 or …Z" />
+            </div>
+
+            <div class="control" id="builderPickerWrap">
+              <label class="control__label" for="builderPicker">Pick date & time</label>
+              <div class="builderPickerRow">
+                <input id="builderPickerDate" class="input mono" type="date" />
+                <input id="builderPickerTime" class="input mono" type="time" min="00:00:00" max="23:59:59" pattern="[0-2][0-9]:[0-5][0-9]:[0-5][0-9]" step="1" />
+                <select id="builderPickerTz" class="select">
+                  <option value="-12:00">AoE (−12:00)</option>
+                  <option value="Z">UTC (Z)</option>
+                  <option value="+00:00">UTC (+00:00)</option>
+                  <option value="+01:00">+01:00</option>
+                  <option value="+02:00">+02:00</option>
+                  <option value="+10:00">+10:00</option>
+                  <option value="+12:00">+12:00</option>
+                </select>
+                <button id="builderUsePicker" class="btn btn--ghost" type="button">Use</button>
+              </div>
+              <div class="muted builderHint">Fills the ISO/AoE fields above.</div>
+            </div>
+
+            <div class="control" id="builderAoeWrap" hidden>
+              <label class="control__label" for="builderAoe">AoE datetime</label>
+              <input id="builderAoe" class="input mono" type="text" placeholder="2026-05-15T23:59:59" />
+            </div>
+
+            <div class="control" id="builderTbdWrap" hidden>
+              <label class="control__label" for="builderDate">Approx date (YYYY-MM-DD)</label>
+              <input id="builderDate" class="input mono" type="text" placeholder="2026-05-01" />
+            </div>
+          </div>
+
+          <div class="builderPanel__actions">
+            <button id="builderGenerate" class="btn" type="button">Generate JSON</button>
+            <button id="builderCopy" class="btn btn--ghost" type="button">Copy</button>
+            <span id="builderHint" class="builderHint muted">Paste into <span class="mono">conferences.json</span> or <span class="mono">journals.json</span>.</span>
+          </div>
+
+          <div class="control">
+            <label class="control__label" for="builderOut">JSON item</label>
+            <textarea id="builderOut" class="textarea mono" rows="10" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
