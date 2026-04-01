@@ -534,6 +534,7 @@
         "Biometrics",
         "Speech"
       ],
+      "core_ranking": "B",
       "note": "Notification of paper acceptance: June 10, 2026",
       "submission": {
         "type": "datetime_aot",
