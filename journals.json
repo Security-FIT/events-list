@@ -17,6 +17,17 @@
         "LLMs"
       ],
       "note": "Rolling submissions."
+    },
+    {
+      "name": "Lecture Notes in Artificial Intelligence",
+      "url": "https://www.springer.com/gp/computer-science/lncs/lncs-topical-sublibraries",
+      "tags": [
+        "LLMs",
+        "Biometrics",
+        "Speech"
+      ],
+      "note": "Submission: July 10th Invited post-publication from ICAART",
+      "sjr": "Q2"
     }
   ]
 }
