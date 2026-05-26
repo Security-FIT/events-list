@@ -1,6 +1,17 @@
 {
   "conferences": [
     {
+      "name": "ESANN 2027",
+      "url": "https://www.esann.org/",
+      "tags": [],
+      "note": "General machine learning, neural networks.",
+      "core_ranking": "B",
+      "submission": {
+        "type": "tbd",
+        "date": ""
+      }
+    },
+    {
       "name": "ICPR 2026",
       "url": "https://icpr2026.org/calls.html",
       "submission": {
