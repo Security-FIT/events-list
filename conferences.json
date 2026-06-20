@@ -1,6 +1,22 @@
 {
   "conferences": [
     {
+      "name": "ICAART",
+      "url": "https://icaart.scitevents.org/",
+      "tags": [
+        "LLMs",
+        "Security",
+        "Biometrics",
+        "Speech"
+      ],
+      "note": "Boční B konference, Zbyněk tam dostal svůj první source tracing paper.",
+      "core_ranking": "B",
+      "submission": {
+        "type": "datetime_aot",
+        "aot": "2026-09-17T23:59:59"
+      }
+    },
+    {
       "name": "ESANN 2027",
       "url": "https://www.esann.org/",
       "tags": [],
